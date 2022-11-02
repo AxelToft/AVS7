@@ -1,15 +1,34 @@
 import glob
-
+import cv2 as cv
 import numpy as np
+
+import video as vd
+'''
+   Object : List of videos
+   Autor : Julien Roussel Galle
+   Creation : 1/11/2022
+   Last Update : 1/11/2022
+   Update Note: 
+        1/11/2022 : Dosctrings
+'''
 
 
 class videos:
-    def __init__(self,origin):
+    def __init__(self, origin):
+        """
+        List of videos
+        Args:
+            origin: Full path to get videos
+        """
         self.count_fish = 0
-        self.list_videos = np.array([])
-        self.add_videos(origin)
-        self.actual_count= 0
-        self.k =0
-    def add_videos(self,origin):
-        for video in glob.glob("../Datas/Baseline_videos_mp4/Training_data/*.mp4"):
-            self.list_videos = np.append(self.list_videos,video)
+        self.list_videos = np.array([], dtype=object)
+        #self.actual_count = 0
+        self.k = 0
+        num_video = 0
+        for vid in glob.glob(origin):
+            while num_video < 5:
+                video = vd.video(vid, num_video)
+                self.list_videos = np.append(self.list_videos, video)
+
+                num_video += 1
+
