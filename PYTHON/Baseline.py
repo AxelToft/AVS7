@@ -50,7 +50,7 @@ def plot_frame(image, text, middle, distance):
     cv.waitKey(10)
 
 
-def plot_histogram_for_each_frame(gray, line1plot, line2plot, ax, fig, i, middle, distance, var1plot,
+def plot_histogram_for_each_frame(line1plot, line2plot, ax, fig, i, var1plot,
                                   var2plot, video, line1, line2,plot_vertical_line1,plot_vertical_line2):
     """
     Plot histogram for each frame in same time as showing the video
@@ -160,7 +160,7 @@ def Baseline(videos, distance, threshold, background_subtraction, plot_graph=Fal
                 line1 = (gray[:, middle + distance:middle + distance + 1])
                 line2 = (gray[:, middle - distance:middle - distance + 1])
             if plot_graph:
-                plot_histogram_for_each_frame(gray, line1plot, line2plot, ax, fig, i, middle, distance,
+                plot_histogram_for_each_frame(line1plot, line2plot, ax, fig, i,
                                               plot_var1, plot_var2, video, line1, line2,plot_vertical_line1,plot_vertical_line2)
             line1 = is_line_activated(line1, threshold)
             line2 = is_line_activated(line2, threshold)
@@ -235,7 +235,8 @@ if __name__ == '__main__':
     Main function
     """
     videos = videos(
-        'C:/Donnees/IMT Atlantique/TC/AAU/Semestre/Project Local/2 - Technical study/Datas/Baseline_videos_mp4/Training_data/*.mp4')
+        'C:/Users/julie/Aalborg Universitet/CE7-AVS 7th Semester - Documents/General/Project/Vattenfall-fish-open-data/fishai_training_datasets_v4/video/Baseline_videos_mp4_full/training/*.mp4')
+    print("non")
 
     distance = 400
     threshold = 20
