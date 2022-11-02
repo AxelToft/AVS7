@@ -11,6 +11,7 @@ class video:
             video_path: path to the video
         """
         self.vidcap = cv.VideoCapture(video)
+        self.background_vidcap = cv.VideoCapture(video)
         self.number_frames = int(self.vidcap.get(cv.CAP_PROP_FRAME_COUNT))
         ret, next_frame = self.vidcap.read()
         self.num_video = num_video
@@ -33,23 +34,25 @@ class video:
 
         """
         l=0
+        ret, next_frame = self.background_vidcap.read()
+        gray = cv.cvtColor(next_frame, cv.COLOR_BGR2GRAY)
 
-        """while True :
-            ret, next_frame = self.vidcap.read()
-            if ret:
+        frame_concat_line1 = gray[:, middle + distance:middle + distance + 1].copy()
+        frame_concat_line2 = gray[:, middle - distance:middle - distance + 1].copy()
+        while True :
+            ret, next_frame = self.background_vidcap.read()
+            if ret and l < 100:
                 gray = cv.cvtColor(next_frame, cv.COLOR_BGR2GRAY)
                 line1 = gray[:, middle + distance:middle + distance + 1]
                 line2 = gray[:, middle - distance:middle - distance + 1]
-                self.bg1 =np.append(self.bg1,line1)
-                self.bg2 = np.append(self.bg2, line2)
+                frame_concat_line1 = np.concatenate((frame_concat_line1, line1), axis=1)
+                frame_concat_line2 = np.concatenate((frame_concat_line2, line2), axis=1)
                 l+=1
             else :
                 break
-        self.bg1 = self.bg1[0]
-        self.bg2 = self.bg2[0]"""
-        ret, next_frame = self.vidcap.read()
-        self.bg1 = cv.cvtColor(next_frame[:, middle + distance:middle + distance + 1], cv.COLOR_BGR2GRAY)
-        self.bg2 = cv.cvtColor(next_frame[:, middle - distance-5:middle - distance -4], cv.COLOR_BGR2GRAY)
+        self.bg1 = np.median(frame_concat_line1, axis=1)
+        self.bg2 = np.median(frame_concat_line2, axis=1)
+
 
 
     def background_subtraction(self,gray,num_line):
@@ -61,8 +64,10 @@ class video:
         Returns:
             gray frame without background
         """
+        self.bg1 = self.bg1.reshape((self.bg1.shape[0], 1))
+        self.bg2 = self.bg2.reshape((self.bg2.shape[0], 1))
 
         if num_line == 1 :
-            return np.abs(gray - self.bg1)
+            return np.where((gray - self.bg1) < 0, 0, gray - self.bg1).astype(np.uint8)
         else :
-            return np.abs(gray - self.bg2)
+            return np.where((gray - self.bg2) < 0, 0, gray - self.bg2).astype(np.uint8)
