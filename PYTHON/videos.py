@@ -27,7 +27,8 @@ class videos:
         num_video = 0
         for vid in glob.glob(origin):
             print("oui")
-            while num_video < 5:
+            if num_video < 5:
+                print(vid)
                 video = vd.video(vid, num_video)
                 self.list_videos = np.append(self.list_videos, video)
 
