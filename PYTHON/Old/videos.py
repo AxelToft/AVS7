@@ -26,7 +26,6 @@ class videos:
         self.k = 0
         num_video = 0
         for vid in glob.glob(origin):
-            print("oui")
             if num_video < 5:
                 print(vid)
                 video = vd.video(vid, num_video)

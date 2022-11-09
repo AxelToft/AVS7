@@ -10,28 +10,55 @@
 
 """
 import glob
+import os
 
 import numpy as np
 
 from video import video as vd
-def counting_fish(list_vn) -> int:
+
+
+def counting_fish(video):
     """
     count fish
     Args:
-        direction: direction of fish
+       list_videos: list of videos
 
     Returns:
-        direction : 1 if fish is going right, -1 if fish is going left
-    """
-    return None
 
+    """
+    #TODO : Define entering and exit frames
+    counting_fish_v01() # baseline 0.1
+
+
+def counting_fish_v01():
+    i = 0
+    for lines_values in video.sequence:
+        if (lines_values == [1, 1]).all():
+
+            if (video.sequence[i + 1] == [1, 0]).all():
+                if (video.sequence[i + 2] == [0, 0]).all():
+                    video.count_fish += 1
+
+            elif (video.sequence[i + 1] == [0, 1]).all():
+
+                if (video.sequence[i + 2] == [0, 0]).all():
+                    video.count_fish -= 1
+
+        i += 1
 # test function :
 
-path = 'C:/Donnees/IMT Atlantique/TC/AAU/Semestre/Project Local/2 - Technical study/Datas/Baseline_videos_mp4/Training_data/*.mp4'
-number_video = 0
-for vid in glob.glob(path):
-    while number_video < 2:
-        video = vd.video(vid, number_video)
-        list_videos = np.append(list_videos, video)
-        number_video += 1
 
+path = 'C:/Users/julie/Aalborg Universitet/CE7-AVS 7th Semester - Documents/General/Project/Vattenfall-fish-open-data/fishai_training_datasets_v4/video/Baseline_videos_mp4_full/training/*.mp4'
+
+number_video = 0
+list_videos = np.array([], dtype=object)
+
+for vid in glob.glob(path):
+    if number_video < 2:
+        print(vid)
+        video = vd(vid, number_video, os.path.basename(vid))
+        list_videos = np.append(list_videos,video)
+    number_video   += 1
+list_videos[0].sequence = np.array([[1, 1], [1, 0], [0, 0]])
+list_videos[1].sequence = np.array([[1, 1], [0, 1], [0, 0]])
+#counting_fish(list_videos)

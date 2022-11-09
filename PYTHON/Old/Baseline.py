@@ -15,7 +15,7 @@ from videos import videos
 '''
 
 
-def is_line_activated(line, threshold) -> int:
+def is_line_activated(line, threshold, i, video) -> int:
     """
     Check if line is activated
     Args:
@@ -25,9 +25,12 @@ def is_line_activated(line, threshold) -> int:
     Returns:
         1 if line is activated, 0 otherwise
     """
-    if np.median(line) > threshold:
+    hist = cv.calcHist([line], [0], None, [256], [0, 256])
+    if np.var(hist) < threshold:
+        # video.count_fish += 1
+        # video.frames_count = np.append(video.frames_count, i)
         return 1
-    if np.median(line) < threshold:
+    if np.var(hist) > threshold:
         return 0
 
 
@@ -50,8 +53,30 @@ def plot_frame(image, text, middle, distance):
     cv.waitKey(10)
 
 
+def check_count(video, sequence, i):
+    """
+    Check if count is correct
+    Args:
+        count: count to check
+        count_fish: count of fish
+
+    Returns:
+        count_fish: count of fish
+    """
+    print("last sequence : ", str(sequence[-5]), str(sequence[-4]), str(
+        sequence[-3]), str(sequence[-2]), str(
+        sequence[-1]))
+    # if str(sequence[-5]) == str(0.0) and str(sequence[-4])== str(0.1) and str(sequence[-3]== str(1.1)) and str(sequence[-2])==str(1.0) and str(sequence[-1])==str(0.0) :
+    if str(sequence[-3] == str(0.1)) and str(
+            sequence[-2]) == str(1.1) and str(sequence[-1]) == str(1.0):
+        video.count_fish += 1
+        video.frames = np.append(video.frames_count, i)
+        print("fish compté +1")
+    return video.count_fish
+
+
 def plot_histogram_for_each_frame(line1plot, line2plot, ax, fig, i, var1plot,
-                                  var2plot, video, line1, line2,plot_vertical_line1,plot_vertical_line2):
+                                  var2plot, video, line1, line2, plot_vertical_line1, plot_vertical_line2):
     """
     Plot histogram for each frame in same time as showing the video
     Args:
@@ -95,8 +120,8 @@ def plot_histogram_for_each_frame(line1plot, line2plot, ax, fig, i, var1plot,
     ax[1, 1].autoscale_view()
     ax[1, 0].autoscale_view()
     ax[2, 0].autoscale_view()
-    ax[0, 0].axhline(y=threshold, color='r', linestyle='-')
-    ax[0, 1].axhline(y=threshold, color='r', linestyle='-')
+    ax[1, 0].axhline(y=threshold, color='r', linestyle='-')
+    ax[1, 1].axhline(y=threshold, color='r', linestyle='-')
 
     fig.suptitle('Video number :' + str(video.num_video), fontsize=30)
     fig.tight_layout()
@@ -115,13 +140,6 @@ def Baseline(videos, distance, threshold, background_subtraction, plot_graph=Fal
     Returns:
 
     """
-    """if plot_graph:
-        plt.ion()
-        fig, ax = plt.subplots(2, 3)
-        line1plot = ax[0, 0].plot([])
-        line2plot = ax[0, 1].plot([])
-        plot_var1 = ax[1, 0].plot([])
-        plot_var2 = ax[1, 1].plot([])"""
 
     for video in videos.list_videos:
 
@@ -131,9 +149,10 @@ def Baseline(videos, distance, threshold, background_subtraction, plot_graph=Fal
         ret, next_frame = vidcap.read()
         gray = cv.cvtColor(next_frame, cv.COLOR_BGR2GRAY)
 
-        sequence = np.zeros(3)
+        sequence = np.array([])
 
         middle = int(video.width / 2)
+        threshold = 2500
         if plot_graph:
             plt.ion()
             fig, ax = plt.subplots(3, 2)
@@ -149,34 +168,39 @@ def Baseline(videos, distance, threshold, background_subtraction, plot_graph=Fal
             plot_vertical_line2, = ax[2, 1].plot(np.zeros(video.height))
 
         if background_subtraction:
-            video.set_background_line(middle,distance)
+            video.set_background_line(middle, distance)
 
         while ret:
-            if background_subtraction :
-                line1 = video.background_subtraction(gray[:, middle + distance:middle + distance + 1],num_line=1)
-                line2 = video.background_subtraction(gray[:, middle - distance:middle - distance + 1],num_line=2)
-            else :
+            if background_subtraction:
+                line1 = video.background_subtraction(gray[:, middle + distance:middle + distance + 1], num_line=1)
+                line2 = video.background_subtraction(gray[:, middle - distance:middle - distance + 1], num_line=2)
+            else:
 
                 line1 = (gray[:, middle + distance:middle + distance + 1])
                 line2 = (gray[:, middle - distance:middle - distance + 1])
             if plot_graph:
                 plot_histogram_for_each_frame(line1plot, line2plot, ax, fig, i,
-                                              plot_var1, plot_var2, video, line1, line2,plot_vertical_line1,plot_vertical_line2)
-            line1 = is_line_activated(line1, threshold)
-            line2 = is_line_activated(line2, threshold)
-            sequence = np.append(sequence, np.array([line1, line2]))
-            if np.array_equal(sequence[len(sequence) - 3], [1, 0]) and np.array_equal(
-                    sequence[len(sequence) - 2] == [0, 1]) and np.array_equal(sequence[
-                                                                                  len(sequence) - 1] == [0, 0]):
-                videos.count_fish += 1
+                                              plot_var1, plot_var2, video, line1, line2, plot_vertical_line1,
+                                              plot_vertical_line2)
+            line1 = is_line_activated(line1, threshold, i, video)
+            line2 = is_line_activated(line2, threshold, i, video)
+            '''if line1 == 1 or line2 == 1:
+                threshold = 0'''
+            if np.size(sequence) < 5:
+                sequence = np.append(sequence, str(line2) + '.' + str(line1))
+            elif str(sequence[-1]) != str(line2) + '.' + str(line1):
+                sequence = np.append(sequence, str(line2) + '.' + str(line1))
+                check_count(video, sequence, i)
+
             if plot_image:
-                plot_frame(gray, "Count" + str(videos.count_fish), middle, distance)
+                plot_frame(next_frame, "Count" + str(videos.count_fish), middle, distance)
             i += 1
             ret, next_frame = vidcap.read()
             if not ret:
                 break
             gray = cv.cvtColor(next_frame, cv.COLOR_BGR2GRAY)
-        print('count' + str(videos.count_fish))
+        print('count' + str(video.count_fish))
+        # export_json(video)
 
 
 def plot_histogram(videos, distance, threshold) -> object:
@@ -234,11 +258,10 @@ if __name__ == '__main__':
     """
     Main function
     """
-    videos = videos(
-        'C:/Users/julie/Aalborg Universitet/CE7-AVS 7th Semester - Documents/General/Project/Vattenfall-fish-open-data/fishai_training_datasets_v4/video/Baseline_videos_mp4_full/training/*.mp4')
-    print("non")
+    path_video = 'C:/Users/julie/Aalborg Universitet/CE7-AVS 7th Semester - Documents/General/Project/Vattenfall-fish-open-data/fishai_training_datasets_v4/video/Baseline_videos_mp4_full/training/*.mp4'
+    videos = videos(path_video)
 
-    distance = 400
-    threshold = 20
-    Baseline(videos, distance, threshold, background_subtraction=True, plot_image=True, plot_graph=True)
+    distance = 100
+    threshold = 2500
+    Baseline(videos, distance, threshold, background_subtraction=True, plot_image=False, plot_graph=False)
     # plot_histogram(videos, distance, threshold)

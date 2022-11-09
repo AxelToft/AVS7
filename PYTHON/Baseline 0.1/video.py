@@ -16,7 +16,7 @@ import numpy as np
 
 
 class video:
-    def __init__(self, video, num_video):
+    def __init__(self, video, num_video, name_video):
         """
 
         Args:
@@ -25,24 +25,42 @@ class video:
         """
 
         # gereral attributes
+        self.name = name_video  # video's name
         self.vidcap = cv.VideoCapture(video)  # vidcap is the video
         self.number_frames = int(self.vidcap.get(cv.CAP_PROP_FRAME_COUNT))  # number of frames in the video
-        ret, next_frame = self.vidcap.read()  # read the first frame
+
         self.num_video = num_video  # number of the video
         self.count_fish = 0  # number of fish found
-        self.height, self.width, self.channels = next_frame.shape  # height, width and channels of the video
+        ret, next_frame = self.vidcap.read()  # read the first frame
+        self.height, self.width, self.channels = next_frame.shape  # get the height, width and channels of the video
+        self.frames = np.empty((self.number_frames, self.height, self.width, self.channels), dtype=np.uint8)  # array of frames
+        self.gray_frames = np.empty((self.number_frames, self.height, self.width), dtype=np.uint8)  # array of gray frames
         self.foreground_frames = np.zeros((self.height, self.width), dtype=np.uint8)  # foreground frames
         self.numbers_frames_fish_detected = None  # number of frames where fish is detected
         self.frames_direction = np.zeros((self.number_frames, 1), dtype=np.int8)  # direction of the fish
-        self.frames_count = np.array([])  # list of frames where fish is counted
+        self.exit_frames_numbers = np.array([])  # list of frames where fish left
+        self.enter_frames_numbers = np.array([])  # list of frames where fish enters
+        self.fish_count_frames = np.array([])  # list of frames where fish count is updated
         # baseline 0.1 attributes
         self.background1 = np.array([])
         self.background2 = np.array([])
-
+        self.line1 = np.zeros((self.height, 1), dtype=np.uint8)
+        self.line2 = np.zeros((self.height, 1), dtype=np.uint8)
         self.background_vidcap = cv.VideoCapture(video)
         self.evolution_var1 = np.zeros(self.number_frames)
         self.evolution_var2 = np.zeros(self.number_frames)
-        self.sequence = np.zeros(self.number_frames)
+        self.sequence = None
+
+
+        k = 0
+        while ret :
+            self.frames[k] = next_frame
+            self.gray_frames[k] = cv.cvtColor(next_frame, cv.COLOR_BGR2GRAY)
+            ret, next_frame = self.vidcap.read()
+            k+= 1
+        self.vidcap.release()
+
+
     def set_background_line(self, distance, middle):
         """
         Set background of the video
@@ -85,3 +103,10 @@ class video:
             return np.where((gray - self.bg1) < 0, 0, gray - self.bg1).astype(np.uint8)
         else:
             return np.where((gray - self.bg2) < 0, 0, gray - self.bg2).astype(np.uint8)
+
+    def set_lines(self,distance_from_middle = 50):
+        #TODO : set lines for background, or normale frames
+        #[:, middle + distance: middle + distance + 1]
+        self.line1 = self.gray_frames[:, self.width // 2 + distance_from_middle:self.width // 2 + distance_from_middle + 1].copy()
+        self.line2 = self.gray_frames[:, self.width // 2 - distance_from_middle:self.width // 2 - distance_from_middle + 1].copy()
+

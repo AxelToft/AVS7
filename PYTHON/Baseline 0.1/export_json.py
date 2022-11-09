@@ -18,27 +18,28 @@ import numpy as np
 from video import video as vd
 
 
-def export_json(list_video, path, file_name):
+def export_json(video, path, file_name):
     """
     export json
     Args:
+
         list_video: list of videos
+        path: path to folder containing videos
         file_name: name of the file
 
     Returns:
         file_name : name of the file
     """
     # TODO : doesn't work if file doesn't exist or if file is empty
-
-    for video in list_video:
-        # export to json file
-        with open(file_name, 'a') as outfile:
+    # TODO : export to the good directory
+    # TODO : clear file before writing
+    with open(file_name, 'a') as outfile:
             data = {
-                video.name: {'fish_count_frames': video.fish_count_frames.tolist(), 'enter_frame': video.enter_frames_numbers.tolist(),
+                video.name: {'fish_count_frames': video.fish_count_frames, 'enter_frame': video.enter_frames_numbers.tolist(),
                              'exit_frame': video.exit_frames_numbers.tolist(), 'fish_count': video.count_fish}}
 
-            json.dump(data, outfile, default=lambda o: o.__dict__, indent=4)
-    return file_name
+            json.dump(data, outfile)
+
 
 
 
@@ -64,4 +65,4 @@ list_videos[1].enter_frames_number = np.array([8, 9])
 list_videos[0].fish_count_frames = np.array([None, None])
 list_videos[1].fish_count_frames = np.array([None, None])
 
-export_json(list_videos, ' ', 'results')
+#export_json(list_videos, ' ', 'results')

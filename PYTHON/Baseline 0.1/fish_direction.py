@@ -11,7 +11,7 @@
 """
 
 
-def fish_direction(frames) -> int:
+def fish_direction(video) -> int:
     """
     determine fish direction
     Args:
@@ -20,3 +20,5 @@ def fish_direction(frames) -> int:
     Returns:
         direction : 1 if fish is going right, -1 if fish is going left
     """
+    # Nothing really todo for the  aseline
+    return None
