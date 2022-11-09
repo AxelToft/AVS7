@@ -28,17 +28,27 @@ def export_json(video, path, file_name):
         file_name: name of the file
 
     Returns:
-        file_name : name of the file
-    """
-    # TODO : doesn't work if file doesn't exist or if file is empty
-    # TODO : export to the good directory
-    # TODO : clear file before writing
-    with open(file_name, 'a') as outfile:
-            data = {
-                video.name: {'fish_count_frames': video.fish_count_frames, 'enter_frame': video.enter_frames_numbers.tolist(),
-                             'exit_frame': video.exit_frames_numbers.tolist(), 'fish_count': video.count_fish}}
 
-            json.dump(data, outfile)
+    """
+    #TODO : Clear file at the beginning
+    with open(file_name, 'a') as outfile:
+        if video.enter_frames_numbers.size != 0:
+            enter_frames_numbers = video.enter_frames_numbers.tolist()
+        else:
+            enter_frames_numbers = []
+        if video.exit_frames_numbers.size != 0:
+            exit_frames_numbers = video.exit_frames_numbers.tolist()
+        else:
+            exit_frames_numbers = []
+        if  video.fish_count_frames != 0:
+            fish_count_frames =  video.fish_count_frames.tolist()
+        else:
+            fish_count_frames = []
+        data = {
+            video.name: {'fish_count_frames': fish_count_frames, 'enter_frame': enter_frames_numbers,
+                         'exit_frame': exit_frames_numbers, 'fish_count': video.count_fish}}
+
+        json.dump(data, outfile,indent=3)
 
 
 
@@ -47,7 +57,7 @@ def export_json(video, path, file_name):
 
 # test function
 
-
+'''
 path = 'C:/Donnees/IMT Atlantique/TC/AAU/Semestre/Project Local/2 - Technical study/Datas/Baseline_videos_mp4/Training_data/*.mp4'
 number_video = 0
 list_videos = np.array([], dtype=object)
@@ -64,5 +74,5 @@ list_videos[0].enter_frames_numbers = np.array([5, 6])
 list_videos[1].enter_frames_number = np.array([8, 9])
 list_videos[0].fish_count_frames = np.array([None, None])
 list_videos[1].fish_count_frames = np.array([None, None])
-
+'''
 #export_json(list_videos, ' ', 'results')

@@ -18,7 +18,5 @@ def fish_direction(video) -> int:
         frames: list of frames
 
     Returns:
-        direction : 1 if fish is going right, -1 if fish is going left
     """
-    # Nothing really todo for the  aseline
-    return None
+    # Nothing really todo for the  Baseline

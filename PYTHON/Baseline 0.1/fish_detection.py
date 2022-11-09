@@ -69,10 +69,10 @@ def define_sequence(video):
                     sequence = np.append(sequence, np.array([[0, 0]]),axis=0)
 
         k+=1
-    print(sequence)
+
     video.sequence = sequence
 
-
+'''
 path = 'C:/Users/julie/Aalborg Universitet/CE7-AVS 7th Semester - Documents/General/Project/Vattenfall-fish-open-data/fishai_training_datasets_v4/video/Baseline_videos_mp4_full/training/*.mp4'
 
 number_video = 0
@@ -82,4 +82,4 @@ for vid in glob.glob(path):  # get all videos in folder
         video = vd(vid, number_video, os.path.basename(vid))  # create video object
         list_videos = np.append(list_videos, video)  # add video to list
         number_video += 1  # increment video number
-#fish_detection(list_videos)  # detect fish
+#fish_detection(list_videos)  # detect fish'''

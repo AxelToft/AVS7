@@ -27,10 +27,10 @@ def counting_fish(video):
 
     """
     #TODO : Define entering and exit frames
-    counting_fish_v01() # baseline 0.1
+    counting_fish_v01(video) # baseline 0.1
 
 
-def counting_fish_v01():
+def counting_fish_v01(video):
     i = 0
     for lines_values in video.sequence:
         if (lines_values == [1, 1]).all():
@@ -47,7 +47,7 @@ def counting_fish_v01():
         i += 1
 # test function :
 
-
+'''
 path = 'C:/Users/julie/Aalborg Universitet/CE7-AVS 7th Semester - Documents/General/Project/Vattenfall-fish-open-data/fishai_training_datasets_v4/video/Baseline_videos_mp4_full/training/*.mp4'
 
 number_video = 0
@@ -60,5 +60,5 @@ for vid in glob.glob(path):
         list_videos = np.append(list_videos,video)
     number_video   += 1
 list_videos[0].sequence = np.array([[1, 1], [1, 0], [0, 0]])
-list_videos[1].sequence = np.array([[1, 1], [0, 1], [0, 0]])
+list_videos[1].sequence = np.array([[1, 1], [0, 1], [0, 0]])'''
 #counting_fish(list_videos)

@@ -1,7 +1,7 @@
 import glob
 import cv2 as cv
 import numpy as np
-
+import os
 """
    file: video.py
    subject : class video
@@ -16,20 +16,20 @@ import numpy as np
 
 
 class video:
-    def __init__(self, video, num_video, name_video):
+    def __init__(self, video, name_video,video_number):
         """
 
         Args:
             video: video
-            num_video: adding number of the video
+
         """
 
         # gereral attributes
-        self.name = name_video  # video's name
+        self.name =  name_video  # video's name
         self.vidcap = cv.VideoCapture(video)  # vidcap is the video
         self.number_frames = int(self.vidcap.get(cv.CAP_PROP_FRAME_COUNT))  # number of frames in the video
 
-        self.num_video = num_video  # number of the video
+        self.num_video = video_number  # number of the video
         self.count_fish = 0  # number of fish found
         ret, next_frame = self.vidcap.read()  # read the first frame
         self.height, self.width, self.channels = next_frame.shape  # get the height, width and channels of the video
