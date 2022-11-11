@@ -31,20 +31,30 @@ def counting_fish(video):
 
 
 def counting_fish_v01(video):
+    #TODO : study larger sequence
     i = 0
-    for lines_values in video.sequence:
-        if (lines_values == [1, 1]).all():
+    for lines_values in video.sequence[0]:
+        if i<len(video.sequence[0])-4:
+            if (lines_values == [0,1]).all():
+                video.enter_frames_numbers = np.append(video.enter_frames_numbers, video.sequence[1][i])
+                if (video.sequence[0][i + 1] == [1, 1]).all():
+                    if (video.sequence[0][i + 2] == [1, 0]).all():
+                        if (video.sequence[0][i + 3] == [0, 0]).all():
+                            video.count_fish += 1
+                            video.exit_frames_numbers = np.append(video.exit_frames_numbers, video.sequence[1][i])
+                            video.fish_count_frames = np.append(video.fish_count_frames,video.sequence[1][i])
+            if (lines_values == [0,0]).all():
+                if (video.sequence[0][i + 1] == [1, 0]).all():
 
-            if (video.sequence[i + 1] == [1, 0]).all():
-                if (video.sequence[i + 2] == [0, 0]).all():
-                    video.count_fish += 1
-
-            elif (video.sequence[i + 1] == [0, 1]).all():
-
-                if (video.sequence[i + 2] == [0, 0]).all():
-                    video.count_fish -= 1
+                    if (video.sequence[0][i + 2] == [1, 1]).all():
+                        if (video.sequence[0][i + 3] == [0, 1]).all():
+                            if (video.sequence[0][i + 4] == [0, 0]).all():
+                                video.fish_count_frames = np.append(video.fish_count_frames,video.sequence[1][i])
+                                video.count_fish -= 1
 
         i += 1
+
+
 # test function :
 
 '''

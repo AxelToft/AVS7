@@ -40,15 +40,16 @@ def export_json(video, path, file_name):
             exit_frames_numbers = video.exit_frames_numbers.tolist()
         else:
             exit_frames_numbers = []
-        if  video.fish_count_frames != 0:
+        if  video.fish_count_frames.size != 0:
             fish_count_frames =  video.fish_count_frames.tolist()
         else:
             fish_count_frames = []
         data = {
-            video.name: {'fish_count_frames': fish_count_frames, 'enter_frame': enter_frames_numbers,
+            video.name: {'enter_frame': enter_frames_numbers,
                          'exit_frame': exit_frames_numbers, 'fish_count': video.count_fish}}
 
         json.dump(data, outfile,indent=3)
+        outfile.write(',\n')
 
 
 
