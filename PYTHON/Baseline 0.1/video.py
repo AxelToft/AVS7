@@ -16,7 +16,7 @@ import os
 
 
 class video:
-    DISTANCE_FROM_MIDDLE = 70
+    DISTANCE_FROM_MIDDLE = 200
     def __init__(self, video, name_video,video_number):
         """
 
