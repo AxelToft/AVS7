@@ -63,8 +63,8 @@ def define_sequence(video):
         cv.resize(gray, (0, 0), fx=0.5, fy=0.1)
         cv.waitKey(30)'''
 
-        if var1 < THRESHOLD:  # if variance of line 1 is lower than threshold
-            if var2 < THRESHOLD:  # if variance of line 2 is lower than threshold
+        if var1 > THRESHOLD:  # if variance of line 1 is lower than threshold
+            if var2 > THRESHOLD:  # if variance of line 2 is lower than threshold
                 if (sequence[-1] != [1, 1]).any():  # if last sequence is not [1,1]
                     sequence = np.concatenate((sequence, np.array([[1, 1]])), axis=0)  # add [1,1] to sequence
                     list_frame_changing = np.append(list_frame_changing, k)
@@ -73,7 +73,7 @@ def define_sequence(video):
                     sequence = np.append(sequence, np.array([[0, 1]]), axis=0)  # add [0,1] to sequence
                     list_frame_changing = np.append(list_frame_changing, k)
         else:  # if variance of line 1 is higher than threshold
-            if var2 < THRESHOLD:  # if variance of line 2 is lower than threshold
+            if var2 > THRESHOLD:  # if variance of line 2 is lower than threshold
                 if (sequence[-1] != [1, 0]).any():  # if last sequence is not [1,0]
                     sequence = np.append(sequence, np.array([[1, 0]]), axis=0)
                     list_frame_changing = np.append(list_frame_changing, k)
