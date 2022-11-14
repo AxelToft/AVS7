@@ -6,10 +6,11 @@ import numpy as np
 
 from background_subtraction import background_subtraction
 from counting_fish import counting_fish
-from export_json import export_json
+from export_json import export_json, initialize_json
 from fish_detection import fish_detection
 from fish_direction import fish_direction
 from video import video as vd
+from evaluation import evaluate_frame_time, evaluate_frame_count
 
 """
     file:   main.py
@@ -20,7 +21,7 @@ from video import video as vd
 
 if __name__ == '__main__':
     # set parameters
-    path = 'C:/Users/julie/Aalborg Universitet/CE7-AVS 7th Semester - Documents/General/Project/Vattenfall-fish-open-data/fishai_training_datasets_v4/video/Baseline_videos_mp4_full/training/*.mp4'
+    path = 'C:/Users/\kajmo/Aalborg Universitet/CE7-AVS 7th Semester - Documents/General/Project/Vattenfall-fish-open-data/fishai_training_datasets_v4/video/Baseline_videos_mp4_full/training/*.mp4'
     file_result = 'results.json'
     if os.path.exists(file_result):
         os.remove(file_result)
@@ -40,6 +41,8 @@ if __name__ == '__main__':
         list_name_videos = np.append(list_name_videos, os.path.basename(vid))
     k = 0
     print("--------------------------------------------------\nStarting --------------------------------------------------")
+
+    initialize_json(file_result)
 
     for vid in list_vid:
         if vid is not None:
@@ -77,3 +80,10 @@ if __name__ == '__main__':
             video.vidcap.release()
             video.background_vidcap.release()
     print("--------------------------------------------------\nEnd  --------------------------------------------------Time :" + str(time.time() - start))
+    # Compute counting accuracy
+    print("Computing counting accuracy ...")
+    evaluate_frame_count()
+    # Compute entering and exit frame precision
+    evaluate_frame_time()
+    print("Computing entering and exit frame precision ...")
+

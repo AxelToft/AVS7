@@ -42,7 +42,7 @@ def define_sequence(video):
 
     Returns:
     """
-    sequence = np.array([[0, 0]]) # TODO : change initialisation
+    sequence = np.array([[None, None]]) # TODO : change initialisation
     list_frame_changing = []
     k = 0
     for line1, line2,gray in zip(video.line1, video.line2,video.gray_frames):
@@ -91,7 +91,7 @@ def define_sequence(video):
 
 
 
-path = 'C:/Users/julie/Aalborg Universitet/CE7-AVS 7th Semester - Documents/General/Project/Vattenfall-fish-open-data/fishai_training_datasets_v4/video/Baseline_videos_mp4_full/training/*.mp4'
+path = 'C:/Users/kmoe/Aalborg Universitet/CE7-AVS 7th Semester - Documents/General/Project/Vattenfall-fish-open-data/fishai_training_datasets_v4/video/Baseline_videos_mp4_full/training/*.mp4'
 
 number_video = 0
 list_videos = np.array([], dtype=object)
