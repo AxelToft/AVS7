@@ -21,64 +21,45 @@ from evaluation import evaluate_frame_time, evaluate_frame_count
 
 if __name__ == '__main__':
     # set parameters
-    path = 'C:/Users/\kajmo/Aalborg Universitet/CE7-AVS 7th Semester - Documents/General/Project/Vattenfall-fish-open-data/fishai_training_datasets_v4/video/Baseline_videos_mp4_full/training/*.mp4'
-    file_result = 'results.json'
-    if os.path.exists(file_result):
+
+    path = 'C:/Users/\julie/Aalborg Universitet/CE7-AVS 7th Semester - Documents/General/Project/Vattenfall-fish-open-data/fishai_training_datasets_v4/video/Baseline_videos_mp4_full/training/*.mp4'
+    file_result = 'results.json'  # file to save results
+    if os.path.exists(file_result):  # if file exists, delete it
         os.remove(file_result)
-    else:
-        # create file
-        with open(file_result, "w") as f:
-            f.close()
-    '''path = argparse.ArgumentParser()
-    file_result = argparse.ArgumentParser()'''
 
-    list_vid = None
-    list_name_videos = np.empty(0)
-    start = time.time()
+    list_vid = None  # list of videos
+    list_name_videos = np.empty(0)  # list of names of videos
+    start = time.time()  # start time
 
-    for vid in glob.glob(path):
-        list_vid = np.append(list_vid, vid)
-        list_name_videos = np.append(list_name_videos, os.path.basename(vid))
+    for vid in glob.glob(path):  # for each video in the path
+        list_vid = np.append(list_vid, vid)  # add video to list
+        list_name_videos = np.append(list_name_videos, os.path.basename(vid))  # add name of video to list
     k = 0
     print("--------------------------------------------------\nStarting --------------------------------------------------")
 
-    initialize_json(file_result)
+    initialize_json(file_result)  # initialize json file
 
-    for vid in list_vid:
-        if vid is not None:
-            video = vd(vid, list_name_videos[k], video_number=k)
+    for vid in list_vid:  # for each video in the list
+        if vid is not None:  # if video is not empty
+            video = vd(vid, list_name_videos[k], video_number=k)  # create video object
             k += 1
             print("---------------------------------------------\n Evaluating video number : " + str(
                 video.num_video) + "---Video : " + video.name + "---------------------------------------------")
 
-            print("Subtracting background ...")
-            before_time = time.time()
-            background_subtraction(video)
-
-            print("_________Computing time : " + str(time.time() - before_time) + " seconds_________")
+            print("Subtracting background ...")  # subtract background
+            background_subtraction(video,method='median') # median background substraction
 
             print("Detecting fish ...")
-            before_time = time.time()
-            fish_detection(video)
-            print("_________Computing time : " + str(time.time() - before_time) + " seconds_________")
+            fish_detection(video) # detect fish
 
             print("Detecting fish direction ...")
-            before_time = time.time()
-            fish_direction(video)
-            print("_________Computing time : " + str(time.time() - before_time) + " seconds_________")
-            # count fish and set values for each video -> video.count_fish
+            fish_direction(video)   # detect fish direction
             print('Counting fish ...')
-            before_time = time.time()
-            counting_fish(video)
-            print("_________Computing time : " + str(time.time() - before_time) + " seconds_________")
-            # export results to json file from list videos results
+            counting_fish(video)   # count fish
             print('Exporting results to json file ...')
-            before_time = time.time()
-            export_json(video, path, file_result)
-            print("_________Computing time : " + str(time.time() - before_time) + " seconds_________")
-            # release memory
-            video.vidcap.release()
-            video.background_vidcap.release()
+            export_json(video, path, file_result) # export results to json file
+
+            video.vidcap.release() # release memory
     print("--------------------------------------------------\nEnd  --------------------------------------------------Time :" + str(time.time() - start))
     # Compute counting accuracy
     print("Computing counting accuracy ...")
@@ -86,4 +67,3 @@ if __name__ == '__main__':
     # Compute entering and exit frame precision
     evaluate_frame_time()
     print("Computing entering and exit frame precision ...")
-

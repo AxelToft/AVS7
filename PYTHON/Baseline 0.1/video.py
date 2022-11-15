@@ -48,7 +48,6 @@ class video:
         self.line_2_after_background = np.array([])
         self.line1 = np.zeros((self.height, 1), dtype=np.uint8)
         self.line2 = np.zeros((self.height, 1), dtype=np.uint8)
-        self.background_vidcap = cv.VideoCapture(video)
         self.evolution_var1 = np.zeros(self.number_frames)
         self.evolution_var2 = np.zeros(self.number_frames)
         self.sequence = None
