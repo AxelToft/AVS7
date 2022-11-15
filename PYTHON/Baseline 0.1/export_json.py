@@ -54,7 +54,8 @@ def export_json(video, path, file_name):
             "video": video.name,
             "enter_frames": enter_frames_numbers,
             "exit_frames": exit_frames_numbers,
-            "fish_count": video.count_fish
+            "fish_count": video.count_fish,
+            "sequence": video.sequence[0].tolist()
         })
         file.seek(0)
         json.dump(file_data,file, indent=4)
