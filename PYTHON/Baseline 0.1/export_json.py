@@ -18,12 +18,15 @@ import numpy as np
 from video import video as vd
 
 def initialize_json(file_name):
+    if os.path.exists(file_name):  # if file exists, delete it
+        os.remove(file_name)
+
     with open(file_name, 'w+') as file:
         data = "{\"results\": []}"
         file.write(data)
         file.close()
 
-def export_json(video, path, file_name):
+def export_json(video, file_name):
     """
     export json
     Args:
