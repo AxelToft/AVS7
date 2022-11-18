@@ -70,12 +70,11 @@ def baseline(distance=300, threshold=1000, path=None, file_results='results.json
             print(f"Time for computing export: {time.perf_counter() - current_time}")
             current_time = time.perf_counter()
 
-            video.vidcap.release()  # release memory
     # Compute counting accuracy
     print(f"Computing counting accuracy ... Time for computing accuracy: {time.perf_counter() -current_time}")
     accuracy = evaluate_frame_count(file_results)
     # Compute entering and exit frame precision
     # print("Computing entering and exit frame precision ...")
 
-    print("--------------------------------------------------\nEnd  --------------------------------------------------Time :" + str(time.perf_counter() - current_time))
+    print("--------------------------------------------------\nEnd  --------------------------------------------------Time :" + str(time.perf_counter() - start))
     return accuracy

@@ -30,9 +30,12 @@ class video:
         """
 
         # gereral attributes
-        vr = VideoReader(video, ctx=cpu(0))
+        vr = VideoReader(video, ctx=cpu(1))
         frames_list = list(range(0, len(vr)))
         self.frames = vr.get_batch(frames_list).asnumpy()
+
+
+
         self.height, self.width, self.channels = self.frames[0].shape
         self.gray_frames = np.empty((len(vr), self.height, self.width), dtype=np.uint8)  # array of gray frames
 
