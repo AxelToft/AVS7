@@ -72,10 +72,10 @@
     "fish_count": 1
   },
   "fish_video21.mp4": {
-    "fish_count_frames": [-1],
+    "fish_count_frames": [0],
     "enter_frame": [9, 102],
     "exit_frame": [74, null],
-    "fish_count": -1
+    "fish_count": 0
   },
   "fish_video22.mp4": {
     "fish_count_frames": [1],

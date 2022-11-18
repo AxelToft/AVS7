@@ -52,7 +52,8 @@ def define_sequence(video,threshold):
 
         var1 = np.var(hist1)  # get variance of line 1
         var2 = np.var(hist2)  # get variance of line 2
-
+        video.evolution_var1[k] = var1  # save variance of line 1
+        video.evolution_var2[k] = var2  # save variance of line 2
         if var1 > threshold:  # if variance of line 1 is greater than threshold
             if var2 > threshold:  # if variance of line 2 is greater than threshold
                 if (sequence[-1] != [1, 1]).any():  # if last sequence is not [1,1]

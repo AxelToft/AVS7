@@ -1,0 +1,16 @@
+Distance = 150 Threshold = 1000 Accuracy Training= 0.5 Accuracy Validation 0.5
+Distance = 150 Threshold = 1400 Accuracy Training= 0.55 Accuracy Validation 0.4
+Distance = 150 Threshold = 1800 Accuracy Training= 0.55 Accuracy Validation 0.30000000000000004
+Distance = 325 Threshold = 1000 Accuracy Training= 0.65 Accuracy Validation 0.6
+Distance = 325 Threshold = 1400 Accuracy Training= 0.55 Accuracy Validation 0.7
+Distance = 325 Threshold = 1800 Accuracy Training= 0.55 Accuracy Validation 0.8
+Distance = 500 Threshold = 1000 Accuracy Training= 0.55 Accuracy Validation 0.30000000000000004
+Distance = 500 Threshold = 1400 Accuracy Training= 0.6 Accuracy Validation 0.30000000000000004
+Distance = 500 Threshold = 1800 Accuracy Training= 0.55 Accuracy Validation 0.6
+Distance = 150 Threshold = 1000 Accuracy Training= 0.5 Accuracy Validation 0.5
+Distance = 150 Threshold = 1800 Accuracy Training= 0.55 Accuracy Validation 0.30000000000000004
+Distance = 150 Threshold = 1000 Accuracy Training= 0.5 Accuracy Validation 0.5
+Distance = 150 Threshold = 1800 Accuracy Training= 0.55 Accuracy Validation 0.30000000000000004
+Distance = 500 Threshold = 1000 Accuracy Training= 0.55 Accuracy Validation 0.30000000000000004
+Distance = 500 Threshold = 1800 Accuracy Training= 0.55 Accuracy Validation 0.6
+
