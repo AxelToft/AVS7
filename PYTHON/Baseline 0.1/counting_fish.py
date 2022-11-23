@@ -9,9 +9,6 @@
 
 
 """
-import glob
-import os
-
 import numpy as np
 
 from video import video as vd
@@ -21,7 +18,8 @@ def counting_fish(video):
     """
     count fish
     Args:
-       list_videos: list of videos
+        video: video object
+
 
     Returns:
 
@@ -53,7 +51,7 @@ def counting_fish_v01(video):
     # We use a stage machine approach to solve the logic problem
     while not reached_end:
         if stage == 0:
-            #print("stage 0")
+            # print("stage 0")
             if np.array_equal(video.sequence[0][i], [0, 0]) and not mid_spawn:  # Look for the first frame that contains [0,0]
                 stage = 1
             elif np.array_equal(video.sequence[0][i], [1, 1]) or mid_spawn:  # if we instead find [1,1], then fish spawned in the middle
@@ -66,7 +64,7 @@ def counting_fish_v01(video):
             if i >= len(video.sequence[0]):  # Stop if we reach the end of the sequence
                 break
         elif stage == 1:  # Then we wait for the first frame that contains [1,0] or [0,1]
-            #print("stage 1")
+            # print("stage 1")
             if np.array_equal(video.sequence[0][i], [1, 0]):  # Save the sequence and go to next stage
                 stage = 2
                 line_state_1 = [1, 0]
@@ -82,7 +80,7 @@ def counting_fish_v01(video):
             if i >= len(video.sequence[0]):
                 break
         elif stage == 2:  # Now we wait for the fish to exit again
-            #print("stage 2")
+            # print("stage 2")
             if np.array_equal(video.sequence[0][i], [0, 0]):
                 stage = 3
                 i -= 1  # When we find [0,0], we go back in sequence to find the first [0,1] or [1,0]
@@ -91,7 +89,7 @@ def counting_fish_v01(video):
             if i >= len(video.sequence[0]):
                 break
         elif stage == 3:
-            #print("stage 3")  # Now we go back in sequence to find the first [0,1] or [1,0]
+            # print("stage 3")  # Now we go back in sequence to find the first [0,1] or [1,0]
             if i_at_exitframe is None:
                 i_at_exitframe = i + 2  # Save the index of the frame after where the fish exited
             if i_at_enterframe != i:  # We continue to go back until we reach the frame where the fish entered or find [0,1] or [1,0]
@@ -115,10 +113,11 @@ def counting_fish_v01(video):
             else:  # If we reach the frame where the fish entered, then we go back to stage 2 and look for the next exit
                 stage = 2
                 i = i_at_exitframe
+                # i_at_exitframe = None
             if i >= len(video.sequence[0]):
                 break
         elif stage == 4:
-            #print("stage 4")
+            # print("stage 4")
             # Now we can count the fish
             if line_state_1 == [0, 1] and line_state_2 == [1, 0]:  # [0,1] -> [1,0] = fished entered right and leaved to the left.
                 video.count_fish += 1

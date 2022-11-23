@@ -23,7 +23,7 @@ from decord import cpu, gpu
 class video:
     DISTANCE_FROM_MIDDLE = 200
 
-    def __init__(self, video, name_video, video_number):
+    def __init__(self, video, video_number):
         """
 
         Args:
@@ -33,7 +33,7 @@ class video:
 
         # gereral attributes
 
-        self.name = name_video  # video's name
+        self.name = os.path.basename(video)  # video's name
         self.vidcap = cv.VideoCapture(video)  # vidcap is the video
         self.number_frames = int(self.vidcap.get(cv.CAP_PROP_FRAME_COUNT))  # number of frames in the video
         self.num_video = video_number  # number of the video
@@ -48,6 +48,7 @@ class video:
         self.exit_frames_numbers = np.array([])  # list of frames where fish left
         self.enter_frames_numbers = np.array([])  # list of frames where fish enters
         self.fish_count_frames = np.array([])  # list of frames where fish count is updated
+        self.frames_subtract = np.zeros((self.number_frames, self.height, self.width), dtype=np.uint8)  # array of frames subtracted
         # baseline 0.1 attributes
         self.line1_after_background = np.array([])
         self.line_2_after_background = np.array([])
@@ -69,5 +70,5 @@ class video:
     def set_lines(self):
         # TODO : set lines for background, or normale frames
         # [:, middle + distance: middle + distance + 1]
-        self.line1 = self.gray_frames[:, :, self.width // 2 + self.DISTANCE_FROM_MIDDLE:self.width // 2 + self.DISTANCE_FROM_MIDDLE + 1].copy()
-        self.line2 = self.gray_frames[:, :, self.width // 2 - self.DISTANCE_FROM_MIDDLE:self.width // 2 - self.DISTANCE_FROM_MIDDLE + 1].copy()
+        self.line1 = self.gray_frames[:, 250:1440, self.width // 2 + self.DISTANCE_FROM_MIDDLE:self.width // 2 + self.DISTANCE_FROM_MIDDLE + 1].copy()
+        self.line2 = self.gray_frames[:, 250:1440, self.width // 2 - self.DISTANCE_FROM_MIDDLE:self.width // 2 - self.DISTANCE_FROM_MIDDLE + 1].copy()

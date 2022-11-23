@@ -59,4 +59,4 @@ def evaluate_frame_count(file_results):
         print('Ground truth exiting frame count : ' + str(anno_data[video]['exit_frame']) + " vs " + str(data['results'][i]['exit_frames']))
         print('Measured sequence :' + str(data['results'][i]['sequence']))'''
 
-    return str(1 - (negative_diff_count + positive_diff_count) / len(data['results']))
+    return str(1 - (negative_diff_count + positive_diff_count) / len(data['results'])),wrong_count
