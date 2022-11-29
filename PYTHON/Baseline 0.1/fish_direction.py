@@ -19,4 +19,4 @@ def fish_direction(video) -> int:
 
     Returns:
     """
-    # Nothing really todo for the  Baseline
+    # Nothing really to do for the  Baseline

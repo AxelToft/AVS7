@@ -52,3 +52,4 @@ def baseline(distance=200, threshold=900, path=None, file_results='results.json'
 
 if __name__ == '__main__':
     baseline()
+

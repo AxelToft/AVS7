@@ -9,7 +9,6 @@
 
 
 """
-import glob
 import json
 import os
 
@@ -17,19 +16,23 @@ import numpy as np
 
 from video import video as vd
 
-def initialize_json(file_name):
-    with open(file_name, 'w+') as file:
-        data = "{\"results\": []}"
-        file.write(data)
-        file.close()
 
-def export_json(video, path, file_name):
+def initialize_json(file_name):
+    if os.path.exists(file_name):  # if file exists, delete it
+        os.remove(file_name)
+
+    with open(file_name, 'w+') as file:  # create file
+        data = "{\"results\": []}"  # initialize file
+        file.write(data)  # write data
+        file.close()  # close file
+
+
+def export_json(video, file_name):
     """
     export json
     Args:
 
-        list_video: list of videos
-        path: path to folder containing videos
+        video : video
         file_name: name of the file
 
     Returns:
@@ -45,8 +48,8 @@ def export_json(video, path, file_name):
             exit_frames_numbers = video.exit_frames_numbers.tolist()
         else:
             exit_frames_numbers = []
-        if  video.fish_count_frames.size != 0:
-            fish_count_frames =  video.fish_count_frames.tolist()
+        if video.fish_count_frames.size != 0:
+            fish_count_frames = video.fish_count_frames.tolist()
         else:
             fish_count_frames = []
         file_data["results"].append({
@@ -58,6 +61,4 @@ def export_json(video, path, file_name):
             "sequence": video.sequence[0].tolist()
         })
         file.seek(0)
-        json.dump(file_data,file, indent=4)
-        #file.write(',\n')
-
+        json.dump(file_data, file, indent=4)
