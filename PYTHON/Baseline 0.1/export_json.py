@@ -54,6 +54,7 @@ def export_json(video, file_name):
             fish_count_frames = []
         file_data["results"].append({
             "video": video.name,
+            "fish_count_frames": fish_count_frames,
             "enter_frames": enter_frames_numbers,
             "exit_frames": exit_frames_numbers,
             "fish_count": video.count_fish,

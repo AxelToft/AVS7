@@ -18,7 +18,6 @@ from show_video import show_video, show_line
     
 """
 
-
 def baseline(distance=200, threshold=900, path=None, file_results='results.json'):
     # Path to define
     if path is None:
@@ -53,3 +52,4 @@ def baseline(distance=200, threshold=900, path=None, file_results='results.json'
 
 if __name__ == '__main__':
     baseline()
+

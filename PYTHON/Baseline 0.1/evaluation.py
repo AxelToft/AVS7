@@ -15,6 +15,7 @@ def evaluate_frame_count(file_results):
     wrong_count = []
     wrong_count_i = []
     i = 0
+    count_seq_sum = 0
     for eval_video in data['results']:
         # Get ground truth for video
         try:
@@ -27,7 +28,7 @@ def evaluate_frame_count(file_results):
             print("Assuming its Other_fish, so making a fake dict for it")
             anno_data = {
                 eval_video['video']: {
-                    "fish_count_frames": [0],
+                    "fish_count_frames": [],
                     'fish_count': 0,
                     'enter_frame': [],
                     'exit_frame': []
@@ -44,12 +45,24 @@ def evaluate_frame_count(file_results):
                 positive_diff_count += 1
             wrong_count.append(eval_video['video'])
             wrong_count_i.append(i)
+
+        # Get count sequence difference for videos and compare
+        #for gt_count_seq, eval_count_seq in zip(gt_video['fish_count_frames'], eval_video['fish_count_frames']):
+            #count_seq_sum = abs(gt_count_seq - eval_count_seq)
+        #if len(gt_video['fish_count_frames']) == 1 and gt_video['fish_count_frames'][0] == None and len(eval_video['fish_count_frames']) == 0:
+        #    pass
+        if gt_video['fish_count_frames'] != eval_video['fish_count_frames']:
+            count_seq_sum += 1
+            print("fish_count_frames not equal for video: ", eval_video['video'], " ground truth sequence: ", gt_video['fish_count_frames'], " found sequence is: ", eval_video['fish_count_frames'])
+
+
         i += 1
 
     print('Average frame count difference: ' + str(sum / len(data['results'])))
     print('Number of videos with negative difference: ' + str(negative_diff_count))
     print('Number of videos with positive difference: ' + str(positive_diff_count))
     print('Percentage of videos counted right: ' + str(1 - (negative_diff_count + positive_diff_count) / len(data['results'])))
+    print('Wrong sequence sum: ' + str(count_seq_sum))
     print('Videos with wrong count: ' + str(wrong_count))
 
     for video, i in zip(wrong_count, wrong_count_i):

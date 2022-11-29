@@ -40,7 +40,7 @@ def show_video(video,threshold):
         line2.set_ydata(video.evolution_var2)
         frame[:gh+0, video.width - gw:] = cv.cvtColor(mplfig_to_npimage(fig), cv.COLOR_BGR2GRAY) # convert to grayscale
         text = f'Video :{video.name}frame :{k}'
-        if k in video.fish_count_frames:
+        if k in video.exit_frames_numbers:
             text = 'numbers fish :' + str(video.count_fish)
         cv.putText(frame, text, (10, 30), cv.FONT_HERSHEY_SIMPLEX, 1, (0, 0, 255), 2)
         cv.imshow('video', frame)
@@ -71,7 +71,7 @@ def show_line(video):
         line2plt.set_ydata(line2)
         frame[:gh+0, video.width - gw:, :] = mplfig_to_npimage(fig)
         text = f'frame :{k} numbers fish :' + str(video.count_fish)
-        if k in video.fish_count_frames:
+        if k in video.exit_frames_numbers:
             text = 'numbers fish :' + str(video.count_fish)
         cv.putText(frame, text, (10, 30), cv.FONT_HERSHEY_SIMPLEX, 1, (0, 0, 255), 2)
         cv.imshow('video', frame)

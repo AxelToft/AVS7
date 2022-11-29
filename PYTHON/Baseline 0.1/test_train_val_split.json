@@ -1,0 +1,14 @@
+{
+"test": {
+	"file_name": ["fish_video0", "fish_video2", "fish_video3", "fish_video6", "fish_video12", "fish_video20", "fish_video25", "fish_video26", "fish_video34", "fish_video36"]
+},
+
+
+"train":{
+	"file_name": ["fish_video1", "fish_video5", "fish_video8", "fish_video9", "fish_video10", "fish_video11", "fish_video13", "fish_video14", "fish_video18", "fish_video19", "fish_video22", "fish_video24", "fish_video27", "fish_video28", "fish_video30", "fish_video32", "fish_video33", "fish_video35", "fish_video38", "fish_video39"]
+},
+
+"val":{
+	"file_name": ["fish_video4", "fish_video7", "fish_video15", "fish_video16", "fish_video17", "fish_video21", "fish_video23", "fish_video29", "fish_video31", "fish_video37"]
+}
+}

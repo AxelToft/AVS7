@@ -4,8 +4,6 @@ import time
 import cv2 as cv
 import numpy as np
 import os
-from decord import VideoReader
-from decord import cpu, gpu
 
 """
    file: video.py
