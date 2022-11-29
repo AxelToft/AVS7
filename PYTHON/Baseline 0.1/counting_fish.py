@@ -62,8 +62,7 @@ def counting_fish_v01(video):
                 mid_spawn = True
                 stage = 2 # We skip stage 1 and go directly to stage 2
                 # We index by -1 because the first index in video.sequence[0] contains [None, None], which does not contian a frame entry
-                video.enter_frames_numbers = np.append(video.enter_frames_numbers, video.sequence[1][i-1])
-                video.fish_count_frames = np.append(video.fish_count_frames, video.sequence[1][i-1])
+                video.enter_frames_numbers = np.append(video.enter_frames_numbers, video.sequence[1][i - 1])
             i += 1
             if i >= len(video.sequence[0]): # Stop if we reach the end of the sequence
                 break
@@ -72,13 +71,11 @@ def counting_fish_v01(video):
             if np.array_equal(video.sequence[0][i], [1,0]): # Save the sequence and go to next stage
                 stage = 2
                 line_state_1 = [1, 0]
-                video.enter_frames_numbers = np.append(video.enter_frames_numbers, video.sequence[1][i-1])
-                video.fish_count_frames = np.append(video.fish_count_frames, video.sequence[1][i-1])
-            elif np.array_equal(video.sequence[0][i], [0,1]):
+                video.enter_frames_numbers = np.append(video.enter_frames_numbers, video.sequence[1][i - 1])
+            elif np.array_equal(video.sequence[0][i], [0, 1]):
                 stage = 2
                 line_state_1 = [0, 1]
-                video.enter_frames_numbers = np.append(video.enter_frames_numbers, video.sequence[1][i-1])
-                video.fish_count_frames = np.append(video.fish_count_frames, video.sequence[1][i-1])
+                video.enter_frames_numbers = np.append(video.enter_frames_numbers, video.sequence[1][i - 1])
             i_at_enterframe = i
             i += 1
             if i >= len(video.sequence[0]):
@@ -102,16 +99,14 @@ def counting_fish_v01(video):
                         line_state_1 = [0, 1]
                     stage = 4
                     line_state_2 = [1, 0]
-                    video.exit_frames_numbers = np.append(video.exit_frames_numbers, video.sequence[1][i-1])
-                    video.fish_count_frames = np.append(video.fish_count_frames, video.sequence[1][i-1])
-                    i = i_at_exitframe # Return to saved i-th frame
-                elif np.array_equal(video.sequence[0][i], [0,1]):
+                    video.exit_frames_numbers = np.append(video.exit_frames_numbers, video.sequence[1][i - 1])
+                    i = i_at_exitframe  # Return to saved i-th frame
+                elif np.array_equal(video.sequence[0][i], [0, 1]):
                     if mid_spawn:
                         line_state_1 = [1, 0]
                     stage = 4
                     line_state_2 = [0, 1]
-                    video.exit_frames_numbers = np.append(video.exit_frames_numbers, video.sequence[1][i-1])
-                    video.fish_count_frames = np.append(video.fish_count_frames, video.sequence[1][i-1])
+                    video.exit_frames_numbers = np.append(video.exit_frames_numbers, video.sequence[1][i - 1])
                     i = i_at_exitframe
                 i -= 1
             else: # If we reach the frame where the fish entered, then we go back to stage 2 and look for the next exit
@@ -124,10 +119,12 @@ def counting_fish_v01(video):
             # Now we can count the fish
             if line_state_1 == [0, 1] and line_state_2 == [1, 0]: # [0,1] -> [1,0] = fished entered right and leaved to the left.
                 video.count_fish += 1
-                video.fish_count_frames = np.append(video.fish_count_frames, video.sequence[1][i-1])
-            elif line_state_1 == [1, 0] and line_state_2 == [0, 1]: # [1,0] -> [0,1] = fished entered left and leaved to the right.
+                video.fish_count_frames = np.append(video.fish_count_frames, 1)
+            elif line_state_1 == [1, 0] and line_state_2 == [0, 1]:  # [1,0] -> [0,1] = fished entered left and leaved to the right.
                 video.count_fish -= 1
-                video.fish_count_frames = np.append(video.fish_count_frames, video.sequence[1][i-1])
+                video.fish_count_frames = np.append(video.fish_count_frames, -1)
+            elif line_state_1 == [0, 1] and line_state_2 == [0, 1] or line_state_1 == [1, 0] and line_state_2 == [1, 0]:
+                video.fish_count_frames = np.append(video.fish_count_frames, 0)
             stage = 0
             line_state_1 = None
             line_state_2 = None
