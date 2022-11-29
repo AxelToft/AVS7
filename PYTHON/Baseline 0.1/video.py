@@ -2,6 +2,7 @@ import glob
 import cv2 as cv
 import numpy as np
 import os
+
 """
    file: video.py
    subject : class video
