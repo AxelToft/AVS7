@@ -129,6 +129,11 @@ def plot_datasets_distribution(train_fast, test_fast, val_fast, train_slow, test
 
     #plt.title('Distribution of video categories in the entire dataset', y=1.08, font=font)
 
+def add_to_dict(dict, key, class_to_add):
+    #for i in dict:
+    #    if i == key:
+    dict[key]["classification"] = class_to_add
+    return dict
 
 def analyze_fish_time(fish_time, updated_dict):
     '''
@@ -163,16 +168,21 @@ def analyze_fish_time(fish_time, updated_dict):
     color_list = []
     fast_threshold = median_frames_on_line * 0.75
     slow_threshold = median_frames_on_line * 1.25
+    x_index = 0
     for y in y_values:
         # Fast fish are salmon that spend less than 25% of the median time on the line
         if y < fast_threshold:
+            add_to_dict(updated_dict, x_labels[x_index], "Fast fish")
             color_list.append('red')
         # Slow fish are salmon that spend more than 25% of the median time on the line
         elif y > slow_threshold:
+            add_to_dict(updated_dict, x_labels[x_index], "Slow fish")
             color_list.append('blue')
         # Medium fish are salmon that spend between 25% and 125% of the median time on the line
         else:
+            add_to_dict(updated_dict, x_labels[x_index], "Normal fish")
             color_list.append('green')
+        x_index += 1
     fig = y_values.plot(kind='bar', color=color_list)
     fig.set_xticklabels(x_labels, rotation=45, ha='right')
     fig.bar_label(fig.containers[0], label_type='edge')
@@ -276,7 +286,8 @@ def analyze_fish_time(fish_time, updated_dict):
     plt.title('Distribution of video categories in the entire dataset', y=1.08, font=font)
 
     plot_datasets_distribution(train_fast, test_fast, val_fast, train_slow, test_slow, val_slow, train_medium,test_medium, val_medium, font)
-    plt.show()
+
+
 
 if __name__ == '__main__':
     print(find_folder())
@@ -287,3 +298,4 @@ if __name__ == '__main__':
         file.seek(0)
         json.dump(updated_dict, file, indent=4)
     print("Finished getting fish time")
+    plt.show()
