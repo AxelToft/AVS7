@@ -25,7 +25,13 @@ def initialize_json(file_name):
         data = "{\"results\": []}"  # initialize file
         file.write(data)  # write data
         file.close()  # close file
+    if os.path.exists("../Results/test_results.json"):  # if file exists, delete it
+        os.remove("../Results/test_results.json")
 
+    with open("../Results/test_results.json", 'w+') as file:  # create file
+        data = "{\"results\": []}"  # initialize file
+        file.write(data)  # write data
+        file.close()  # close file
 
 def export_json(video, file_name):
     """
@@ -39,6 +45,29 @@ def export_json(video, file_name):
 
     """
     with open(file_name, 'r+') as file:
+        file_data = json.load(file)
+        if video.enter_frames_numbers.size != 0:
+            enter_frames_numbers = video.enter_frames_numbers.tolist()
+        else:
+            enter_frames_numbers = []
+        if video.exit_frames_numbers.size != 0:
+            exit_frames_numbers = video.exit_frames_numbers.tolist()
+        else:
+            exit_frames_numbers = []
+        if video.fish_count_frames.size != 0:
+            fish_count_frames = video.fish_count_frames.tolist()
+        else:
+            fish_count_frames = []
+        file_data["results"].append({
+            "video": video.name,
+            "enter_frames": enter_frames_numbers,
+            "exit_frames": exit_frames_numbers,
+            "fish_count": video.count_fish,
+            "sequence": video.sequence[0].tolist()
+        })
+        file.seek(0)
+        json.dump(file_data, file, indent=4)
+    with open("../Results/test_results.json", 'r+') as file:
         file_data = json.load(file)
         if video.enter_frames_numbers.size != 0:
             enter_frames_numbers = video.enter_frames_numbers.tolist()

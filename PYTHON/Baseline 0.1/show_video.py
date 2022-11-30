@@ -22,14 +22,14 @@ def show_video(video,threshold):
     xlim([0, video.number_frames])
     #ylim([0, np.max(video.evolution_var1)])  # setup wide enough range here
 
-    ylim([0, 7000])  # setup wide enough range here
+    ylim([0, max(np.max(video.evolution_var1),np.max(video.evolution_var2))])  # setup wide enough range here
     axhline(y=threshold, color='r', linestyle='-')
     #('off')
     tight_layout()
     graphRGB = mplfig_to_npimage(fig)
     gh, gw, _ = graphRGB.shape
     text = ''
-    for k,frame in enumerate(video.frames_subtract):
+    for k, frame in enumerate(video.frames):
         #drw videos vertical line
         cv.line(frame, (video.width // 2-video.DISTANCE_FROM_MIDDLE, 250), (video.width // 2-video.DISTANCE_FROM_MIDDLE, 1440), (0, 0, 255), 2)
         cv.line(frame, (video.width // 2+video.DISTANCE_FROM_MIDDLE, 250), (video.width // 2+video.DISTANCE_FROM_MIDDLE, 1440), (0, 0, 255), 2)
@@ -38,7 +38,7 @@ def show_video(video,threshold):
         cv.resizeWindow('video', 1280, 800)
         line.set_ydata(video.evolution_var1)
         line2.set_ydata(video.evolution_var2)
-        frame[:gh+0, video.width - gw:] = cv.cvtColor(mplfig_to_npimage(fig), cv.COLOR_BGR2GRAY) # convert to grayscale
+        frame[:gh+0, video.width - gw:] = mplfig_to_npimage(fig) # convert to grayscale
         text = f'Video :{video.name}frame :{k}'
         if k in video.fish_count_frames:
             text = 'numbers fish :' + str(video.count_fish)

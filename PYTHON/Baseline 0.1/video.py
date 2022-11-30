@@ -57,6 +57,8 @@ class video:
         self.evolution_var1 = np.zeros(self.number_frames)
         self.evolution_var2 = np.zeros(self.number_frames)
         self.sequence = None
+        self.bg1 = None
+        self.bg2 = None
 
         k = 0
         while ret:

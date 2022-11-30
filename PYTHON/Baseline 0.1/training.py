@@ -9,8 +9,8 @@ import numpy as np
 
 class train_learn:
     def __init__(self, list_trn_parameters):
-        self.threshold = 800  # threshold
-        self.distance = 300  # distance
+        self.threshold = 900  # threshold
+        self.distance = 200  # distance
         with open('distance_evaluation', 'w') as f:  # open file
             f.write(f"Parameters : th : {self.threshold} \n")  # write accuracy
             f.write(f"distance;accuracy_training;accuracy_validation;wrong_videos\n")  # write accuracy
@@ -18,9 +18,9 @@ class train_learn:
 
     def training(self, list_trn_parameters):  # training function*
         # Training video path :
-        trn_path = 'C:/Users/\julie/Aalborg Universitet/CE7-AVS 7th Semester - Documents/General/Project/Vattenfall-fish-open-data/fishai_training_datasets_v4/video/Baseline_videos_mp4_full/new_split/train/*.mp4'
+        trn_path = 'C:/Users/\julie/Aalborg Universitet/CE7-AVS 7th Semester - Documents (1)/General/Project/Vattenfall-fish-open-data/fishai_training_datasets_v4/video/Baseline_videos_mp4_full/new_split/train/*.mp4'
         # Validation video path :
-        val_path = 'C:/Users/\julie/Aalborg Universitet/CE7-AVS 7th Semester - Documents/General/Project/Vattenfall-fish-open-data/fishai_training_datasets_v4/video/Baseline_videos_mp4_full/new_split/val/*.mp4'
+        val_path = 'C:/Users/\julie/Aalborg Universitet/CE7-AVS 7th Semester - Documents (1)/General/Project/Vattenfall-fish-open-data/fishai_training_datasets_v4/video/Baseline_videos_mp4_full/new_split/val/*.mp4'
 
         dict = {'distance': [self.distance], 'threshold': [self.threshold]}  # dictionary of parameters
 
@@ -40,13 +40,13 @@ class train_learn:
                 accuracy_trn, wrong_videos_trn = baseline(distance=distance, threshold=threshold, path=trn_path)  # compute accuracy for training videos
                 accuracy_val, wrong_videos_val = baseline(distance=distance, threshold=threshold, path=val_path)  # compute accuracy for validation videos
                 list_accuracy_trn.append(accuracy_trn)
-                # self.training_export(distance, threshold, accuracy_trn, accuracy_val)  # export accuracy for each parameter
-                self.distance_export(distance, accuracy_trn, accuracy_val, wrong_videos_trn)
+                self.training_export(distance, threshold, accuracy_trn, accuracy_val,wrong_videos_trn,wrong_videos_val)  # export accuracy for each parameter
+                # self.distance_export(distance, accuracy_trn, accuracy_val, wrong_videos_trn)
         # self.learning(distances, thresholds, list_accuracy_trn)  # learning function
 
-    def training_export(self, distance, threshold, accuracy_trn, accuracy_val):  # export accuracy
+    def training_export(self, distance, threshold, accuracy_trn, accuracy_val,wrong_videos_trn,wrong_videos_val):  # export accuracy
         with open('accuracies_training', 'a') as f:  # open file
-            f.write(f"Distance = {distance} Threshold = {threshold} Accuracy Training= {accuracy_trn} Accuracy Validation {accuracy_val}\n")  # write accuracy
+            f.write(f"Distance = {distance} Threshold = {threshold} Accuracy Training= {accuracy_trn} Accuracy Validation {accuracy_val} -- {wrong_videos_trn} -- {wrong_videos_val}\n")  # write accuracy
 
     def learning(self, list_distance, list_threshold, list_accuracy):  # learning function
         i = argmax(list_accuracy)  # index of the best accuracy
