@@ -1,0 +1,533 @@
+{
+    "fish_video39.mp4": {
+        "fish_count_frames": [
+            1
+        ],
+        "enter_frame": [
+            170
+        ],
+        "exit_frame": [
+            219
+        ],
+        "fish_count": 1,
+        "total_time": 49,
+        "classification": ""
+    },
+    "fish_video0.mp4": {
+        "fish_count_frames": [
+            -1,
+            1
+        ],
+        "enter_frame": [
+            0,
+            75
+        ],
+        "exit_frame": [
+            233,
+            217
+        ],
+        "fish_count": 0,
+        "total_time": 375,
+        "classification": "Occlusion/multiple fish"
+    },
+    "fish_video10.mp4": {
+        "fish_count_frames": [
+            -1,
+            1
+        ],
+        "enter_frame": [
+            0,
+            130
+        ],
+        "exit_frame": [
+            98,
+            150
+        ],
+        "fish_count": 0,
+        "total_time": 118,
+        "classification": ""
+    },
+    "fish_video11.mp4": {
+        "fish_count_frames": [
+            1
+        ],
+        "enter_frame": [
+            27
+        ],
+        "exit_frame": [
+            137
+        ],
+        "fish_count": 1,
+        "total_time": 110,
+        "classification": ""
+    },
+    "fish_video12.mp4": {
+        "fish_count_frames": [
+        ],
+        "enter_frame": [
+            20
+        ],
+        "exit_frame": [
+            null
+        ],
+        "fish_count": 0,
+        "total_time": 49,
+        "classification": ""
+    },
+    "fish_video13.mp4": {
+        "fish_count_frames": [
+            1,
+            1
+        ],
+        "enter_frame": [
+            18,
+            42
+        ],
+        "exit_frame": [
+            53,
+            81
+        ],
+        "fish_count": 2,
+        "total_time": 74,
+        "classification": "Occlusion/multiple fish"
+    },
+    "fish_video14.mp4": {
+        "fish_count_frames": [
+        ],
+        "enter_frame": [
+            15
+        ],
+        "exit_frame": [
+            null
+        ],
+        "fish_count": 0,
+        "total_time": 56,
+        "classification": ""
+    },
+    "fish_video15.mp4": {
+        "fish_count_frames": [
+            1
+        ],
+        "enter_frame": [
+            38
+        ],
+        "exit_frame": [
+            78
+        ],
+        "fish_count": 1,
+        "total_time": 40,
+        "classification": ""
+    },
+    "fish_video16.mp4": {
+        "fish_count_frames": [
+            1
+        ],
+        "enter_frame": [
+            0
+        ],
+        "exit_frame": [
+            66
+        ],
+        "fish_count": 1,
+        "total_time": 66,
+        "classification": ""
+    },
+    "fish_video18.mp4": {
+        "fish_count_frames": [
+
+        ],
+        "enter_frame": [
+            10
+        ],
+        "exit_frame": [
+            null
+        ],
+        "fish_count": 0,
+        "total_time": 45,
+        "classification": ""
+    },
+    "fish_video19.mp4": {
+        "fish_count_frames": [
+            1
+        ],
+        "enter_frame": [
+            18
+        ],
+        "exit_frame": [
+            54
+        ],
+        "fish_count": 1,
+        "total_time": 36,
+        "classification": ""
+    },
+    "fish_video20.mp4": {
+        "fish_count_frames": [
+            1
+        ],
+        "enter_frame": [
+            26
+        ],
+        "exit_frame": [
+            69
+        ],
+        "fish_count": 1,
+        "total_time": 43,
+        "classification": ""
+    },
+    "fish_video21.mp4": {
+        "fish_count_frames": [
+            0
+        ],
+        "enter_frame": [
+            9,
+            102
+        ],
+        "exit_frame": [
+            74,
+            null
+        ],
+        "fish_count": 0,
+        "total_time": 78,
+        "classification": ""
+    },
+    "fish_video22.mp4": {
+        "fish_count_frames": [
+            1
+        ],
+        "enter_frame": [
+            18
+        ],
+        "exit_frame": [
+            50
+        ],
+        "fish_count": 1,
+        "total_time": 32,
+        "classification": ""
+    },
+    "fish_video23.mp4": {
+        "fish_count_frames": [
+            1,
+            1
+        ],
+        "enter_frame": [
+            22,
+            70
+        ],
+        "exit_frame": [
+            54,
+            143
+        ],
+        "fish_count": 2,
+        "total_time": 105,
+        "classification": "Occlusion/multiple fish"
+    },
+    "fish_video24.mp4": {
+        "fish_count_frames": [
+            1
+        ],
+        "enter_frame": [
+            19
+        ],
+        "exit_frame": [
+            78
+        ],
+        "fish_count": 1,
+        "total_time": 59,
+        "classification": ""
+    },
+    "fish_video25.mp4": {
+        "fish_count_frames": [
+            1
+        ],
+        "enter_frame": [
+            12
+        ],
+        "exit_frame": [
+            46
+        ],
+        "fish_count": 1,
+        "total_time": 34,
+        "classification": ""
+    },
+    "fish_video26.mp4": {
+        "fish_count_frames": [
+            1
+        ],
+        "enter_frame": [
+            26
+        ],
+        "exit_frame": [
+            140
+        ],
+        "fish_count": 1,
+        "total_time": 114,
+        "classification": ""
+    },
+    "fish_video27.mp4": {
+        "fish_count_frames": [
+            1
+        ],
+        "enter_frame": [
+            18
+        ],
+        "exit_frame": [
+            72
+        ],
+        "fish_count": 1,
+        "total_time": 54,
+        "classification": ""
+    },
+    "fish_video28.mp4": {
+        "fish_count_frames": [
+            1
+        ],
+        "enter_frame": [
+            9
+        ],
+        "exit_frame": [
+            28
+        ],
+        "fish_count": 1,
+        "total_time": 19,
+        "classification": ""
+    },
+    "fish_video29.mp4": {
+        "fish_count_frames": [
+            1
+        ],
+        "enter_frame": [
+            25
+        ],
+        "exit_frame": [
+            98
+        ],
+        "fish_count": 1,
+        "total_time": 73,
+        "classification": ""
+    },
+    "fish_video3.mp4": {
+        "fish_count_frames": [
+            1,
+            -1
+        ],
+        "enter_frame": [
+            0,
+            46
+        ],
+        "exit_frame": [
+            97,
+            94
+        ],
+        "fish_count": 0,
+        "total_time": 145,
+        "classification": "Occlusion/multiple fish"
+    },
+    "fish_video31.mp4": {
+        "fish_count_frames": [
+            1
+        ],
+        "enter_frame": [
+            11
+        ],
+        "exit_frame": [
+            45
+        ],
+        "fish_count": 1,
+        "total_time": 34,
+        "classification": ""
+    },
+    "fish_video32.mp4": {
+        "fish_count_frames": [
+            1
+        ],
+        "enter_frame": [
+            10
+        ],
+        "exit_frame": [
+            34
+        ],
+        "fish_count": 1,
+        "total_time": 24,
+        "classification": ""
+    },
+    "fish_video33.mp4": {
+        "fish_count_frames": [
+            1
+        ],
+        "enter_frame": [
+            44
+        ],
+        "exit_frame": [
+            99
+        ],
+        "fish_count": 1,
+        "total_time": 55,
+        "classification": ""
+    },
+    "fish_video34.mp4": {
+        "fish_count_frames": [
+            1
+        ],
+        "enter_frame": [
+            20
+        ],
+        "exit_frame": [
+            86
+        ],
+        "fish_count": 1,
+        "total_time": 66,
+        "classification": ""
+    },
+    "fish_video35.mp4": {
+        "fish_count_frames": [
+            -1
+        ],
+        "enter_frame": [
+            4
+        ],
+        "exit_frame": [
+            19
+        ],
+        "fish_count": -1,
+        "total_time": 15,
+        "classification": ""
+    },
+    "fish_video36.mp4": {
+        "fish_count_frames": [
+            1
+        ],
+        "enter_frame": [
+            10
+        ],
+        "exit_frame": [
+            23
+        ],
+        "fish_count": 1,
+        "total_time": 13,
+        "classification": ""
+    },
+    "fish_video37.mp4": {
+        "fish_count_frames": [
+            1
+        ],
+        "enter_frame": [
+            10
+        ],
+        "exit_frame": [
+            23
+        ],
+        "fish_count": 1,
+        "total_time": 13,
+        "classification": ""
+    },
+    "fish_video38.mp4": {
+        "fish_count_frames": [
+            1
+        ],
+        "enter_frame": [
+            7
+        ],
+        "exit_frame": [
+            30
+        ],
+        "fish_count": 1,
+        "total_time": 23,
+        "classification": ""
+    },
+    "fish_video4.mp4": {
+        "fish_count_frames": [
+            0,
+            1
+        ],
+        "enter_frame": [
+            10,
+            31
+        ],
+        "exit_frame": [
+            null,
+            122
+        ],
+        "fish_count": 1,
+        "total_time": 235,
+        "classification": "Occlusion/multiple fish"
+    },
+    "fish_video5.mp4": {
+        "fish_count_frames": [
+        ],
+        "enter_frame": [
+            0
+        ],
+        "exit_frame": [
+            null
+        ],
+        "fish_count": 0,
+        "total_time": 200,
+        "classification": ""
+    },
+    "fish_video6.mp4": {
+        "fish_count_frames": [
+            1
+        ],
+        "enter_frame": [
+            0
+        ],
+        "exit_frame": [
+            105
+        ],
+        "fish_count": 1,
+        "total_time": 105,
+        "classification": ""
+    },
+    "fish_video7.mp4": {
+        "fish_count_frames": [
+            1,
+            1
+        ],
+        "enter_frame": [
+            3,
+            86
+        ],
+        "exit_frame": [
+            7,
+            136
+        ],
+        "fish_count": 2,
+        "total_time": 54,
+        "classification": ""
+    },
+    "fish_video8.mp4": {
+        "fish_count_frames": [
+            1,
+            1
+        ],
+        "enter_frame": [
+            0,
+            12
+        ],
+        "exit_frame": [
+            69,
+            38
+        ],
+        "fish_count": 2,
+        "total_time": 95,
+        "classification": "Occlusion/multiple fish"
+    },
+    "fish_video9.mp4": {
+        "fish_count_frames": [
+            1,
+            0
+        ],
+        "enter_frame": [
+            0,
+            72
+        ],
+        "exit_frame": [
+            47,
+            null
+        ],
+        "fish_count": 1,
+        "total_time": 75,
+        "classification": ""
+    }
+}
+
