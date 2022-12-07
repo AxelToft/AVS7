@@ -44,6 +44,7 @@ def baseline(distance=200, threshold=900, path=None, file_results='results.json'
             export_json(video, file_results)  # export results to json file
             #show_video(video, threshold)  # show video
             # show_line(video, threshold) # show line
+            #video.plot_graph()  # plot graph
     cv2.destroyAllWindows()
     # Compute counting accuracy
     accuracy, false_videos = evaluate_frame_count(file_results)

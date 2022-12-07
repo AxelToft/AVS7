@@ -18,6 +18,7 @@ from decord import cpu, gpu
 
 
 """
+import matplotlib.pyplot as plt
 
 
 class video:
@@ -74,3 +75,15 @@ class video:
         # [:, middle + distance: middle + distance + 1]
         self.line1 = self.gray_frames[:, 250:1440, self.width // 2 + self.DISTANCE_FROM_MIDDLE:self.width // 2 + self.DISTANCE_FROM_MIDDLE + 1].copy()
         self.line2 = self.gray_frames[:, 250:1440, self.width // 2 - self.DISTANCE_FROM_MIDDLE:self.width // 2 - self.DISTANCE_FROM_MIDDLE + 1].copy()
+
+    def plot_graph(self):
+        fig, ax = plt.subplots()
+        ax.plot(self.evolution_var1,label='Variance of line1\'s histogram')
+        ax.plot(self.evolution_var2,label='Variance of line2\'s histogram')
+        ax.axhline(y=900, color='black', linestyle='-',label='Detection threshold')
+        plt.xlabel('Frame number')
+        plt.ylabel('Variance')
+        plt.grid()
+        #show legend
+        ax.legend()
+        plt.show()
