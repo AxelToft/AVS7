@@ -4,7 +4,7 @@ import json
 import numpy as np
 import json_exporter as je
 
-# params for ShiTomasi corner detection
+# params for Harris corner detection
 feature_params = dict( maxCorners = 100,
                        qualityLevel = 0.3,
                        minDistance = 20,
@@ -139,6 +139,126 @@ def resize_image(image, scale_percent):
     return output
 
 
+def templete_matching_2(cap):
+    # Load the template image
+    template = cv2.imread("Images/template.png", 0)
+
+    # Set the threshold for the template matching
+    threshold = 0.7
+
+    # Set the minimum and maximum scales for the template
+    min_scale = 0.5
+    max_scale = 2.0
+
+    # Set the scale step for the template
+    scale_step = 0.1
+
+    # Set the optical flow parameters
+    lk_params = dict(winSize = (15, 15),
+                    maxLevel = 2,
+                    criteria = (cv2.TERM_CRITERIA_EPS | cv2.TERM_CRITERIA_COUNT, 10, 0.03))
+
+    # Create the previous frame and previous points arrays
+    prev_frame = None
+    prev_points = []
+
+    while True:
+        # Read the current frame
+        ret, frame = cap.read()
+        frame = resize_image(frame, 50)
+
+        # Check if we have reached the end of the video
+        if not ret:
+            break
+
+        # Convert the frame to grayscale
+        gray = cv2.cvtColor(frame, cv2.COLOR_BGR2GRAY)
+
+        # Use optical flow to find the points that have moved between the previous and current frames
+        if prev_frame is not None:
+            try:
+                curr_points, status, error = cv2.calcOpticalFlowPyrLK(prev_frame, gray, prev_points, None, **lk_params)
+                prev_frame = gray.copy()
+                prev_points = curr_points
+            except:
+                prev_frame = gray.copy()
+                prev_points = []
+        else:
+            prev_frame = gray.copy()
+
+        # Use template matching to find the location of the template in the current frame
+        for scale in np.arange(min_scale, max_scale, scale_step):
+            resized_template = cv2.resize(template, None, fx=scale, fy=scale)
+            res = cv2.matchTemplate(gray, resized_template, cv2.TM_CCOEFF_NORMED)
+            loc = np.where(res >= threshold)
+
+            # Loop over all the detected locations
+            for pt in zip(*loc[::-1]):
+                # Draw a rectangle around the detected object
+                cv2.rectangle(frame, pt, (pt[0] + resized_template.shape[1], pt[1] + resized_template.shape[0]), (0, 255, 0), 1)
+
+        # Display the frame
+        cv2.imshow("Frame", frame)
+
+        # Check if the user pressed the 'q' key
+        if cv2.waitKey(1) & 0xFF == ord('q'):
+            break
+
+
+def templete_matching(cap):
+    # Load the template image
+    template = cv2.imread("code/template.png", 0)
+
+    # Set the threshold for the template matching
+    threshold = 0.5
+
+    # Create the background subtractor
+    fgbg = cv2.createBackgroundSubtractorKNN()
+
+    while True:
+        # Read the current frame
+        ret, frame = cap.read()
+
+        # Convert the frame to grayscale
+        gray = cv2.cvtColor(frame, cv2.COLOR_BGR2GRAY)
+
+        # Apply the background subtractor
+        fgmask = fgbg.apply(frame)
+
+        # use morphology to remove noise
+        kernel_close = np.ones((10, 10), np.uint8)
+        kernel_open = np.ones((20, 20), np.uint8)
+        fgmask = cv2.morphologyEx(fgmask, cv2.MORPH_CLOSE, kernel_close)
+        fgmask = cv2.morphologyEx(fgmask, cv2.MORPH_OPEN, kernel_open)
+
+        # Make the mask binary
+        ret, fgmask = cv2.threshold(fgmask, 100, 255, cv2.THRESH_BINARY)
+
+        # Gray mask
+        gray_mask = cv2.bitwise_and(gray, gray, mask=fgmask)
+
+        # Check if we have reached the end of the video
+        if not ret:
+            break
+
+        # Use template matching to find the location of the template in the frame
+        res = cv2.matchTemplate(gray_mask, template, cv2.TM_CCOEFF_NORMED)
+        loc = np.where(res >= threshold)
+
+        # Loop over all the detected locations
+        for pt in zip(*loc[::-1]):
+            # Draw a rectangle around the detected object
+            cv2.rectangle(gray_mask, pt, (pt[0] + template.shape[1], pt[1] + template.shape[0]), (0, 255, 0), 1)
+
+        # Display the frame
+        display_img = resize_image(gray_mask, 50)
+        cv2.imshow("Frame", display_img)
+
+        # Check if the user pressed the 'q' key
+        if cv2.waitKey(1) & 0xFF == ord('q'):
+            break
+
+
 def background_subtraction(cap, display=True):
 
     # https://github.com/opencv/opencv/blob/master/samples/python/tutorial_code/video/optical_flow/optical_flow.py
@@ -180,6 +300,10 @@ def background_subtraction(cap, display=True):
             # Apply the background subtractor
             fgmask = fgbg.apply(frame)
 
+            # Gray mask for the copy image
+            gray_mask_copy_n = cv2.bitwise_and(frame, frame, mask=fgmask)
+            frame_copy = frame.copy()
+
             # Show the background images
             background_img = fgbg.getBackgroundImage()
 
@@ -194,6 +318,9 @@ def background_subtraction(cap, display=True):
 
             # Gray mask
             gray_mask = cv2.bitwise_and(next, next, mask=fgmask)
+
+            # Gray mask copy
+            gray_mask_copy_morph = cv2.bitwise_and(next, next, mask=fgmask)
 
             # Remove noise at the top, bottom and right of the image
             gray_mask[:300, :] = 0
@@ -325,9 +452,11 @@ def background_subtraction(cap, display=True):
                         #cv2.imshow("prvs", prvs)
                         if cv2.waitKey(1) & 0xFF == ord('s'):
                             print("Saving images...")
-                            cv2.imwrite("backgroundMOG.png", background_img)
-                            cv2.imwrite("Frame.png", frame)
+                            cv2.imwrite("backgroundKNN.png", background_img)
+                            cv2.imwrite("Frame.png", frame_copy)
                             cv2.imwrite("Mask.png", mask2)
+                            cv2.imwrite("No_morph.png", gray_mask_copy_n)
+                            cv2.imwrite("with_morph.png", gray_mask_copy_morph)
 
                     # Now update the previous frame and previous points
                     prvs = result.copy()
@@ -374,7 +503,7 @@ def main():
     fish_count_json = 0
     fish_correct_index = 0
     fish_false_index = 0
-    video_dir = "C:/Users/Benja/Aalborg Universitet/CE7-AVS 7th Semester - General/Project/Vattenfall-fish-open-data/fishai_training_datasets_v4/video/Baseline_videos_mp4_full/new_split/test/"
+    video_dir = "C:/Users/Benja/Aalborg Universitet/CE7-AVS 7th Semester - General/Project/Vattenfall-fish-open-data/fishai_training_datasets_v4/video/Baseline_videos_mp4_full/new_split/val/"
     for entry in os.listdir(video_dir):
         if os.path.isfile(os.path.join(video_dir, entry)):
             print(video_dir + entry)
@@ -389,7 +518,11 @@ def main():
     print("Total fish count: " + str(fish_count))
     print("Total fish index correct: " + str(fish_correct_index))
     print("Total fish index false: " + str(fish_false_index))
-    print("Total fish index error: " + str(fish_false_index / (fish_correct_index + fish_false_index)))
+
+    if fish_correct_index + fish_false_index > 0:
+        print("Total fish index error: " + str(fish_false_index / (fish_correct_index + fish_false_index)))
+    else:
+        print("Total fish index error: 0")
 
 
 if __name__ == "__main__":
