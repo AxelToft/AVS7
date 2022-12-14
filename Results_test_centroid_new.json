@@ -1,0 +1,124 @@
+{
+    "results": [
+        {
+            "video": "fish_video0.mp4",
+            "fish_count_frames": [
+                1,
+                -1,
+                1,
+                -1,
+                1,
+                -1,
+                1
+            ],
+            "enter_frames": null,
+            "exit_frames": null,
+            "fish_count": 1,
+            "sequence": []
+        },
+        {
+            "video": "fish_video12.mp4",
+            "fish_count_frames": [],
+            "enter_frames": null,
+            "exit_frames": null,
+            "fish_count": 0,
+            "sequence": []
+        },
+        {
+            "video": "fish_video2.mp4",
+            "fish_count_frames": [],
+            "enter_frames": null,
+            "exit_frames": null,
+            "fish_count": 0,
+            "sequence": []
+        },
+        {
+            "video": "fish_video20.mp4",
+            "fish_count_frames": [],
+            "enter_frames": null,
+            "exit_frames": null,
+            "fish_count": 0,
+            "sequence": []
+        },
+        {
+            "video": "fish_video25.mp4",
+            "fish_count_frames": [
+                1
+            ],
+            "enter_frames": null,
+            "exit_frames": null,
+            "fish_count": 1,
+            "sequence": []
+        },
+        {
+            "video": "fish_video26.mp4",
+            "fish_count_frames": [
+                1,
+                -1,
+                1,
+                1,
+                -1,
+                1,
+                -1,
+                -1
+            ],
+            "enter_frames": null,
+            "exit_frames": null,
+            "fish_count": 0,
+            "sequence": []
+        },
+        {
+            "video": "fish_video3.mp4",
+            "fish_count_frames": [
+                -1
+            ],
+            "enter_frames": null,
+            "exit_frames": null,
+            "fish_count": -1,
+            "sequence": []
+        },
+        {
+            "video": "fish_video34.mp4",
+            "fish_count_frames": [
+                1
+            ],
+            "enter_frames": null,
+            "exit_frames": null,
+            "fish_count": 1,
+            "sequence": []
+        },
+        {
+            "video": "fish_video36.mp4",
+            "fish_count_frames": [
+                1
+            ],
+            "enter_frames": null,
+            "exit_frames": null,
+            "fish_count": 1,
+            "sequence": []
+        },
+        {
+            "video": "fish_video6.mp4",
+            "fish_count_frames": [
+                1,
+                -1,
+                1,
+                -1,
+                1,
+                -1,
+                1,
+                -1,
+                1,
+                1,
+                -1,
+                1,
+                1,
+                -1
+            ],
+            "enter_frames": null,
+            "exit_frames": null,
+            "fish_count": 2,
+            "sequence": []
+        }
+    ]
+}

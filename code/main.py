@@ -4,12 +4,6 @@ import json
 import numpy as np
 import json_exporter as je
 
-# params for Harris corner detection
-feature_params = dict( maxCorners = 100,
-                       qualityLevel = 0.3,
-                       minDistance = 20,
-                       blockSize = 5)
-
 
 # Parameters for lucas kanade optical flow
 lk_params = dict( winSize  = (100, 100),
@@ -24,17 +18,19 @@ class point:
         self.OldX = 0
         self.OldY = 0
         self.direction = 0
-        self.crossedEnter = False
-        self.crossedExit = False
-        self.points = []
-        self.oldPoints = []
 
-    def update(self, meanX, meanY, meanXOld, meanYOld, meanDirection):
+    def update_new(self, meanX, meanY):
         self.x = meanX
         self.y = meanY
-        self.OldX = meanXOld
-        self.OldY = meanYOld
-        self.direction = meanDirection
+        
+    def update_old(self):
+        self.OldX = self.x
+        self.OldY = self.y
+        
+    def update_direction(self, direction):
+        self.direction = direction
+        
+    
 
 
 def nothing(x):
@@ -108,7 +104,7 @@ def trackbar():
 
 
 def load_json():
-    with open('C:/Users/Benja/Aalborg Universitet/CE7-AVS 7th Semester - General/Project\Vattenfall-fish-open-data/fishai_training_datasets_v4/video/Baseline_videos_mp4_full/Annotations_full.json') as f:
+    with open('Annotations_full.json') as f:
         data = json.load(f)
         return data
 
@@ -259,30 +255,21 @@ def templete_matching(cap):
             break
 
 
-def background_subtraction(cap, display=True):
-
-    # https://github.com/opencv/opencv/blob/master/samples/python/tutorial_code/video/optical_flow/optical_flow.py
+def track_fish(cap, display=True):
 
     # Create the background subtractor
-    fgbg = cv2.createBackgroundSubtractorKNN()
+    fgbg = cv2.createBackgroundSubtractorKNN(detectShadows=True, dist2Threshold=400) # Defualt distThreshold = 400
+    print(fgbg.getDist2Threshold())
     #fgbg = cv2.createBackgroundSubtractorMOG2()
 
     # Take first frame and find corners in it
-    p0 = None
-    prvs = None
-    st = None
     fish1 = point(0, 0, 1)
     fish2 = point(0, 0, 2)
-    fish3= point(0, 0, 3)
-    fishs = [fish1, fish2, fish3]
+    fishs = [fish1, fish2]
     fish_count_sequence = []
-
-    # Create some random colors
-    color = np.random.randint(0, 255, (100, 3))
 
     frame_count = 0
     fish_count = 0
-    meanX, meanY, meanOldX, meanOldY, meanDirection = 0, 0, 0, 0, 0
 
     threshold_exit = [(1280, 0), (1280, 1440)]
 
@@ -315,6 +302,8 @@ def background_subtraction(cap, display=True):
 
             # Make the mask binary
             ret, fgmask = cv2.threshold(fgmask, 100, 255, cv2.THRESH_BINARY)
+            
+            fgmask_copy = fgmask.copy()
 
             # Gray mask
             gray_mask = cv2.bitwise_and(next, next, mask=fgmask)
@@ -326,6 +315,15 @@ def background_subtraction(cap, display=True):
             gray_mask[:300, :] = 0
             gray_mask[1100:1440, :] = 0
             gray_mask[:, 2000:2560] = 0
+            
+            #next[:300, :] = 0
+            #next[1100:1440, :] = 0
+            #next[:, 2000:2560] = 0
+            
+            # Count all non-zero pixels
+            #print("Non-zero pixels: " + str(cv2.countNonZero(next)))
+            
+            cv2.imshow("frame_copy", next)
 
             # Find contours in each frame and assign them as a new fish
             contours, hierarchy = cv2.findContours(gray_mask, cv2.RETR_TREE, cv2.CHAIN_APPROX_SIMPLE)
@@ -333,19 +331,22 @@ def background_subtraction(cap, display=True):
             # Get the two biggest contours by area
             contours = sorted(contours, key=cv2.contourArea, reverse=True)
 
-            # Only keep the biggest 1 contours
-            contours = contours[:1]
-
-            # draw the contours
-            cv2.drawContours(frame, contours, -1, (0, 255, 0), 3)
+            # Only keep the biggest 2 contours
+            contours = contours[:2]
 
             if frame_count > 3:
 
                 for i in range(len(contours)):
-
+                    
+                    #print("Contour area: " + str(cv2.contourArea(contours[i])))
+                    
                     # If the contour is too small, ignore it
-                    if cv2.contourArea(contours[i]) < 5000:
+                    if cv2.contourArea(contours[i]) < 80000:
+                        print("Skipping contour...")
                         continue
+                    
+                    # draw the contours
+                    cv2.drawContours(frame, contours, -1, (0, 255, 0), 3)
 
                     # Create a new mask for each image
                     gray_mask_copy = np.zeros(gray_mask.shape[:2], dtype=gray_mask.dtype)
@@ -353,97 +354,47 @@ def background_subtraction(cap, display=True):
                     cv2.drawContours(gray_mask_copy, [contours[i]], 0, 255, -1)
                     result = cv2.bitwise_and(gray_mask, gray_mask, mask=gray_mask_copy)
                     
-                    # Write the size of the area of the contour
-                    #cv2.putText(frame, str(cv2.contourArea(contours[i])), (10, 30), cv2.FONT_HERSHEY_SIMPLEX, 1, (0, 0, 255), 2, cv2.LINE_AA)
+                    # Write the frame number
                     cv2.putText(frame, str(frame_count), (10, 30), cv2.FONT_HERSHEY_SIMPLEX, 1, (0, 0, 255), 2, cv2.LINE_AA)
 
-                    # If we dont have any good features to track, find them
-                    if p0 is None:
-                        print("Looking for features...")
-                        p0 = cv2.goodFeaturesToTrack(result, mask = None, **feature_params)
-                        prvs = result
-
                     mask = np.zeros_like(result)
+                    
+                    # Get the center point of each contour of the fish
+                    M = cv2.moments(contours[i])
+                    cx = int(M['m10'] / M['m00'])
+                    cy = int(M['m01'] / M['m00'])
+                    tracked_point = (cx, cy)
+                    fishs[i].update_new(tracked_point[0], tracked_point[1])
+                    
+                    # Make sure the fish first position is not 0, 0
+                    if fishs[i].OldX == 0 and fishs[i].OldY == 0:
+                        fishs[i].OldX = fishs[i].x
+                        fishs[i].OldY = fishs[i].y
 
-                    # If we loose all the features, find new ones
-                    if st is None:
-                        print("Looking for new features...")
-                        p0 = cv2.goodFeaturesToTrack(result, mask = None, **feature_params)
-                        prvs = result
+                    # Get the direction of the fish
+                    direction_fish = (fishs[i].x - fishs[i].OldX) + (fishs[i].y - fishs[i].OldY)
+                    fishs[i].direction = direction_fish
 
-                        # calculate optical flow with the new points
-                        p1, st, err = cv2.calcOpticalFlowPyrLK(prvs, result, p0, None, **lk_params)
-                    else:
-                        p1, st, err = cv2.calcOpticalFlowPyrLK(prvs, result, p0, None, **lk_params)
+                    # Draw the mean point position
+                    cv2.circle(frame, (int(fishs[i].x), int(fishs[i].y)), 5, (0, 0,255), -1)
+                    cv2.circle(frame, (int(fishs[i].OldX), int(fishs[i].OldY)), 5, (255, 0, 0), -1)
+                    cv2.line(frame, (int(fishs[i].x), int(fishs[i].y)), (int(fishs[i].OldX), int(fishs[i].OldY)), (0, 255, 0), 2)
+                    
+                    # Draw the threshold lines
+                    cv2.line(frame, threshold_exit[0], threshold_exit[1], (255,255,0), 2)
 
-                    # Select good points
-                    if p1 is not None:
-                        good_new = p1[st==1]
-                        good_old = p0[st==1]
-
-                        fishs[i].points = good_new
-                        fishs[i].oldPoints = good_old
-
-                    # draw the tracks
-                    try:
-                        for j, (new, old) in enumerate(zip(fishs[i].points, fishs[i].oldPoints)):
-
-                            # Get the tracked points coordinates
-                            a, b = new.ravel()
-                            c, d = old.ravel()
-
-                            # Draw the tracked points and their last position
-                            mask = cv2.line(mask, (int(a), int(b)), (int(c), int(d)), color[j].tolist(), 2)
-                            mask = cv2.circle(mask, (int(a), int(b)), 5, color[j].tolist(), -1)
-
-                            # Draw the threshold lines
-                            mask = cv2.line(mask, threshold_exit[0], threshold_exit[1], color[j].tolist(), 2)
-
-                            # Find mean between each point
-                            meanX += a
-                            meanY += b
-
-                            meanOldX += c
-                            meanOldY += d
-                            
-                            meanDirection += int(a - c)
-
-                        # Find the mean of all the points
-                        if len(fishs[i].points) > 0:
-                            meanX = meanX / len(fishs[i].points)
-                            meanY = meanY / len(fishs[i].points)
-                            meanOldX = meanOldX / len(fishs[i].points)
-                            meanOldY = meanOldY / len(fishs[i].points)
-
-                        # Get the mean direction
-                        meanDirection = meanDirection / len(fishs[i].points)
-
-                        # Update the fish tracker
-                        fishs[i].update(meanX, meanY, meanOldX, meanOldY, meanDirection)
-
-                        # Draw the mean point position
-                        mask = cv2.circle(mask, (int(fishs[i].x), int(fishs[i].y)), 5, color[i].tolist(), -1)
-                        mask = cv2.circle(mask, (int(fishs[i].OldX), int(fishs[i].OldY)), 5, color[i].tolist(), -1)
-                        mask = cv2.line(mask, (int(fishs[i].x), int(fishs[i].y)), (int(fishs[i].OldX), int(fishs[i].OldY)), color[i].tolist(), 2)
-
-                        # Check if the line has crossed the exit threshold and the direction of the line
-                        if fishs[i].x < threshold_exit[0][0] and fishs[i].OldX > threshold_exit[0][0] and fishs[i].direction < 0 and fishs[i].crossedExit == False:
-                            fishs[i].crossedExit = True
-                            fish_count += 1
-                            print("Crossed exit threshold with count + 1")
-                            fish_count_sequence.append(1)
-                        elif fishs[i].x > threshold_exit[0][0] and fishs[i].OldX < threshold_exit[0][0] and fishs[i].direction > 0:
-                            fishs[i].crossedExit = False
-                            fish_count -= 1
-                            print("Crossed exit threshold with count - 1")
-                            fish_count_sequence.append(-1)
-                        mask2 = cv2.add(result, mask)
+                    # Check if the line has crossed the exit threshold and the direction of the line
+                    if fishs[i].x < threshold_exit[0][0] and fishs[i].OldX > threshold_exit[0][0] and fishs[i].direction < 0:
+                        fish_count += 1
+                        print("Crossed exit threshold with count + 1")
+                        fish_count_sequence.append(1)
+                    elif fishs[i].x > threshold_exit[0][0] and fishs[i].OldX < threshold_exit[0][0] and fishs[i].direction > 0:
+                        fish_count -= 1
+                        print("Crossed exit threshold with count - 1")
+                        fish_count_sequence.append(-1)
                         
-                        if display:
-                            img_re_mask = resize_image(mask2, 50)
-                            cv2.imshow("mask2", img_re_mask)
-                    except:
-                        pass
+                    # Update the fish tracker old points
+                    fishs[i].update_old()
 
                     #cv2.imshow("result2", result)
                     if display:
@@ -452,15 +403,12 @@ def background_subtraction(cap, display=True):
                         #cv2.imshow("prvs", prvs)
                         if cv2.waitKey(1) & 0xFF == ord('s'):
                             print("Saving images...")
-                            cv2.imwrite("backgroundKNN.png", background_img)
+                            # cv2.imwrite("backgroundKNN.png", background_img)
                             cv2.imwrite("Frame.png", frame_copy)
-                            cv2.imwrite("Mask.png", mask2)
                             cv2.imwrite("No_morph.png", gray_mask_copy_n)
                             cv2.imwrite("with_morph.png", gray_mask_copy_morph)
-
-                    # Now update the previous frame and previous points
-                    prvs = result.copy()
-                    p0 = good_new.reshape(-1, 1, 2)
+                            cv2.imwrite("result.png", frame)
+                            cv2.imwrite("contours.png", fgmask_copy)
 
             # Close the program when 'q' is pressed
             if cv2.waitKey(1) & 0xFF == ord('q'):
@@ -468,7 +416,6 @@ def background_subtraction(cap, display=True):
             elif cv2.waitKey(1) & 0xFF == ord('s'):
                 print("Saving images...")
                 cv2.imwrite("backgroundMOG.png", background_img)
-                cv2.imwrite("Mask.png", mask2)
 
             # Update frame count
             frame_count += 1
@@ -498,21 +445,21 @@ def evaluation_fish_count(fish_counted, fish_count_json):
 
 def main():
     annotations_json = load_json()
-    je.initialize_json("Results_test.json")
+    je.initialize_json("Results_val_centroid.json")
     fish_count = 0
     fish_count_json = 0
     fish_correct_index = 0
     fish_false_index = 0
-    video_dir = "C:/Users/Benja/Aalborg Universitet/CE7-AVS 7th Semester - General/Project/Vattenfall-fish-open-data/fishai_training_datasets_v4/video/Baseline_videos_mp4_full/new_split/val/"
+    video_dir = "val/"
     for entry in os.listdir(video_dir):
         if os.path.isfile(os.path.join(video_dir, entry)):
             print(video_dir + entry)
             cap = cv2.VideoCapture(video_dir + entry)
-            fish_count_c, fish_count_sequence = background_subtraction(cap)
+            fish_count_c, fish_count_sequence = track_fish(cap)
             fish_count += fish_count_c
             fish_count_json_c, __ = check_annotations(annotations_json, entry)
             fish_count_json += fish_count_json_c
-            je.export_json(entry, fish_count_c, fish_count_sequence, "Results_test.json")  
+            je.export_json(entry, fish_count_c, fish_count_sequence, "Results_val_centroid.json")  
             
     evaluation_fish_count(fish_count, fish_count_json)
     print("Total fish count: " + str(fish_count))
