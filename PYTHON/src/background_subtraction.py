@@ -82,8 +82,8 @@ def mean_background_subtraction(video, entire_frame = False):
     #video.line1 = np.where((video.line1 - video.bg1) < 0, 0, video.line1 - video.bg1).astype(np.uint8)  # subtract background from line 1
     #video.line2 = np.where((video.line2 - video.bg2) < 0, 0, video.line2 - video.bg2).astype(np.uint8)  # subtract background from line 2
     '''for i, (line1,line2) in enumerate(zip(video.line1, video.line2)):
-        video.line1[i]= cv.absdiff(line1, video.bg1[i])
-        video.line2[i] = cv.absdiff(line2, video.bg2[i])'''
+        video.line1[i]= cv.absdiff(line1, video.bg1)
+        video.line2[i] = cv.absdiff(line2, video.bg2)'''
     return fullbackground
 
 

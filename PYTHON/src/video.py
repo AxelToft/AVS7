@@ -81,11 +81,11 @@ class video:
     def plot_variance(self):
         fig, ax = plt.subplots()
 
-        ax.plot(self.evolution_var1, label="Variance of line1's histogram")
-        ax.plot(self.evolution_var2, label="Variance of line2's histogram")
+        ax.plot(self.evolution_var1, label="Variance of histogram of line right")
+        ax.plot(self.evolution_var2, label="Variance of histogram of line left")
         ax.axhline(y=900, color='black', linestyle='-', label='Detection threshold')
 
-        ax.legend()
+        ax.legend(fontsize = 15)
         plt.xlabel("Frame number")
         plt.ylabel("Variance")
         plt.grid()

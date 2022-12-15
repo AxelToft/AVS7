@@ -39,8 +39,8 @@ def baseline(distance=200, threshold=900, path=None, file_results='results.json'
             print("\n Evaluating video number : " + str(video.num_video) + "---Video : " + video.name)
             print(video.number_frames)
             # TODO save subtract to other files in order to not compute every time
-            background_subtraction(video, method='mean', entire_frame=True)  # median background subtraction
-            #image_processing_video(video)
+            #background_subtraction(video, method='mean', entire_frame=True)  # median background subtraction
+            image_processing_video(video)
             fish_detection(video, threshold)  # detect fish
             #video.plot_variance()  # plot graph
 
@@ -49,7 +49,7 @@ def baseline(distance=200, threshold=900, path=None, file_results='results.json'
             counting_fish(video)  # count fish
             export_json(video, file_results)  # export results to json file
             # show_line(video, threshold) # show line
-            # video.plot_graph()  # plot graph
+            #video.plot_variance()  # plot graph
 
     cv2.destroyAllWindows()
     # Compute counting accuracy

@@ -54,34 +54,17 @@ def image_processing_video(video):
     background = mean_background_subtraction(video, entire_frame=True)  # get the background
     #background = cv.imread("../Image processing/backgrounds/mean_background.png", cv.IMREAD_GRAYSCALE)
     roi_background = select_ROI(video, background)
-    fgbg = cv.createBackgroundSubtractorKNN()
     for i, frame in enumerate(video.gray_frames):
-        roi = frame
-        # roi = select_ROI(video, frame)
-        foreground = fgbg.apply(roi)
-        #foreground = np.where((roi - roi_background) < 0, 0, roi - roi_background).astype(np.uint8)
+        roi = select_ROI(video, frame)
+        foreground = np.where((roi - roi_background) < 0, 0, roi - roi_background).astype(np.uint8)
         #foreground = cv.subtract(roi, roi_background)
 
-        video.frames_subtracted[i] = foreground
-        #binary = cv.threshold(foreground, 25, 255, cv.THRESH_BINARY)[1]
-
-        #binary = cv.adaptiveThreshold(foreground, 255, cv.ADAPTIVE_THRESH_GAU SSIAN_C, cv.THRESH_BINARY_INV, 11, 2)
 
 
-        binary_morph_close = cv.morphologyEx(foreground, cv.MORPH_CLOSE, np.ones((10, 10), np.uint8))
-        binary_morph_open = cv.morphologyEx(binary_morph_close, cv.MORPH_OPEN, np.ones((20, 20), np.uint8))
-        ret, binary = cv.threshold(binary_morph_open, 100, 255, cv.THRESH_BINARY)
-        gray_mask = cv.bitwise_and(roi, roi, mask=binary)
+        video.line1[i] = foreground[video.origin[0]:video.origin[0]+video.roi_height, video.width // 2 + video.DISTANCE_FROM_MIDDLE:video.width // 2 + video.DISTANCE_FROM_MIDDLE + 1]
+        video.line2[i] = foreground[video.origin[0]:video.origin[0]+video.roi_height, video.width // 2 - video.DISTANCE_FROM_MIDDLE:video.width // 2 - video.DISTANCE_FROM_MIDDLE + 1]
+        video.frames_after_processing[i] = foreground
 
-
-        video.line1[i] = gray_mask [video.origin[0]:video.origin[0]+video.roi_height, video.width // 2 + video.DISTANCE_FROM_MIDDLE:video.width // 2 + video.DISTANCE_FROM_MIDDLE + 1]
-        video.line2[i] = gray_mask [video.origin[0]:video.origin[0]+video.roi_height, video.width // 2 - video.DISTANCE_FROM_MIDDLE:video.width // 2 - video.DISTANCE_FROM_MIDDLE + 1]
-        video.frames_after_processing[i] = gray_mask
-        images_toPlot = []
-        '''if i == 10:
-            images_toSave = [frame, background, foreground, binary, binary_morph_open, binary_morph_close]
-            save_images(images_toSave)'''
-            # plot_images(images_toPlot, str(k))
 
 
 
