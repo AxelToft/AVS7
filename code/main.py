@@ -1,6 +1,7 @@
 import cv2
 import os
 import json
+import time
 import numpy as np
 import json_exporter as je
 
@@ -29,9 +30,7 @@ class point:
         
     def update_direction(self, direction):
         self.direction = direction
-        
-    
-
+          
 
 def nothing(x):
     pass
@@ -258,8 +257,7 @@ def templete_matching(cap):
 def track_fish(cap, display=True):
 
     # Create the background subtractor
-    fgbg = cv2.createBackgroundSubtractorKNN(detectShadows=True, dist2Threshold=400) # Defualt distThreshold = 400
-    print(fgbg.getDist2Threshold())
+    fgbg = cv2.createBackgroundSubtractorMOG2(detectShadows=True) # Defualt distThreshold = 400
     #fgbg = cv2.createBackgroundSubtractorMOG2()
 
     # Take first frame and find corners in it
@@ -445,22 +443,35 @@ def evaluation_fish_count(fish_counted, fish_count_json):
 
 def main():
     annotations_json = load_json()
-    je.initialize_json("Results_val_centroid.json")
+    je.initialize_json("Results_test_centroid_MOG2.json")
     fish_count = 0
     fish_count_json = 0
     fish_correct_index = 0
     fish_false_index = 0
-    video_dir = "val/"
+    total_average_framerate = 0
+    video_dir = "C:/Users/Benja/Aalborg Universitet/CE7-AVS 7th Semester - General/Project/Vattenfall-fish-open-data/fishai_training_datasets_v4/video/Baseline_videos_mp4_full/new_split/test/"
     for entry in os.listdir(video_dir):
         if os.path.isfile(os.path.join(video_dir, entry)):
+            print("Processing video: " + entry)
             print(video_dir + entry)
+            start_time = time.time()
             cap = cv2.VideoCapture(video_dir + entry)
+            total_frame_count = int(cap.get(cv2.CAP_PROP_FRAME_COUNT))
+            execution_time = 0
             fish_count_c, fish_count_sequence = track_fish(cap)
+            end_time = time.time()
+            execution_time = end_time - start_time
+            avarage_frame_rate = total_frame_count / execution_time
+            print("average frame rate: " + str(avarage_frame_rate))
+            total_average_framerate += avarage_frame_rate
             fish_count += fish_count_c
             fish_count_json_c, __ = check_annotations(annotations_json, entry)
             fish_count_json += fish_count_json_c
-            je.export_json(entry, fish_count_c, fish_count_sequence, "Results_val_centroid.json")  
+            je.export_json(entry, fish_count_c, fish_count_sequence, "Results_test_centroid_MOG2.json")
             
+    total_average_framerate = total_average_framerate / len(os.listdir(video_dir))
+    print("Total average framerate: " + str(total_average_framerate))
+    
     evaluation_fish_count(fish_count, fish_count_json)
     print("Total fish count: " + str(fish_count))
     print("Total fish index correct: " + str(fish_correct_index))
