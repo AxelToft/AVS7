@@ -17,6 +17,9 @@ results.json
 # Mono auto generated files
 mono_crash.*
 
+PYTHON/Baseline 0.1/Results/*.json
+PYTHON/Baseline 0.1/*.pdf
+
 # Build results
 [Dd]ebug/
 [Dd]ebugPublic/
