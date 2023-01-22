@@ -1,4 +1,10 @@
+PYTHON/Baseline 0.1/Results/*.json
+PYTHON/Baseline 0.1/*.pdf
 
+code/__pycache__/
+PYTHON/Baseline 0.1/__pycache__/
+PYTHON/__pycache__/
+.idea/
 test/fish_video0.mp4
 test/fish_video12.mp4
 test/fish_video2.mp4
