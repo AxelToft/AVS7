@@ -9,6 +9,12 @@ import shutil
 import numpy as np
 import matplotlib.gridspec as gridspec
 
+
+# Creating autocpt arguments
+def func(pct, allvalues):
+    absolute = int(pct / 100. * np.sum(allvalues))
+    return "{:.1f}%\n({:d})".format(pct, absolute)
+
 def find(name, path):
     for root, dirs, files in os.walk(path):
         if name in files:
@@ -17,7 +23,7 @@ def find(name, path):
 def find_folder():
     "C:/Users/"
     "D:/"
-    for root, subdirs, files in os.walk("C:/Users/"):
+    for root, subdirs, files in os.walk("D:/"):
         for d in subdirs:
             if d == "new_split":
                 return os.path.join(root, d)
@@ -78,10 +84,11 @@ def save_time_to_json(fish_time):
 
 def plot_datasets_distribution(train_fast, test_fast, val_fast, train_slow, test_slow, val_slow, train_medium, test_medium, val_medium, font):
 
+    print(train_fast, test_fast, val_fast, train_slow, test_slow, val_slow, train_medium, test_medium, val_medium)
     multiple_occlusions_video_count = 6
-    multiple_occlusions_video_count_train = 4
-    multiple_occlusions_video_count_test = 1
-    multiple_occlusions_video_count_val = 1
+    multiple_occlusions_video_count_train = 2
+    multiple_occlusions_video_count_test = 2
+    multiple_occlusions_video_count_val = 2
 
     other_fish_video_count = 4
     other_fish_video_count_train = 2
@@ -89,12 +96,16 @@ def plot_datasets_distribution(train_fast, test_fast, val_fast, train_slow, test
     other_fish_video_count_val = 1
 
     #labels = 'Multiple Fish/ \n Occlusions', 'Other Fish', 'Fast Fish', 'Medium Fish', 'Slow Fish'
-    labels = 'Multiple Salmons/ \n Occlusions', 'Other species', r'$ROI_t < th_{fast}$', '$th_{fast}\geq ROI_t \leq th_{slow}$ ', '$ROI_t > th_{slow}$'
+    labels = 'Multiple Salmons/ \n Occlusions', 'Other species', 'Brief appearance', 'Average appearance', 'Extended appearance'
     sizes_train = [multiple_occlusions_video_count_train, other_fish_video_count_train, train_fast, train_medium, train_slow]
     sizes_test = [multiple_occlusions_video_count_test, other_fish_video_count_test, test_fast, test_medium, test_slow]
     sizes_val = [multiple_occlusions_video_count_val, other_fish_video_count_val, val_fast, val_medium, val_slow]
-    explode = (0.1, 0, 0, 0, 0)  # only "explode" the 2nd slice (i.e. 'Hogs')
+    print("sizes of train data:", sizes_train)
+    print("sizes of test data:", sizes_test)
+    print("sizes of val data:", sizes_val)
+    explode = (0, 0, 0, 0, 0)  # only "explode" the 2nd slice (i.e. 'Hogs')
     colors = ['yellowgreen', 'gold', 'red', 'green', 'blue']
+
 
     #fig, ax = plt.subplots(2,2)
     gs = gridspec.GridSpec(2, 2)
@@ -102,27 +113,27 @@ def plot_datasets_distribution(train_fast, test_fast, val_fast, train_slow, test
     #fig1, ax1, fig2, ax2, fig3, ax3 = plt.subplots(3, 1)
     pl.figure()
     ax1 = plt.subplot(gs[0, 0])
-    ax1.pie(sizes_train, explode=explode, autopct='%1.1f%%',
+    ax1.pie(sizes_train, explode=explode, autopct=lambda pct: func(pct, sizes_train),
             shadow=True, startangle=0, colors=colors)
     ax1.axis('equal')  # Equal aspect ratio ensures that pie is drawn as a circle.
-    ax1.set_title('Training Set', y=1.08, fontdict=font)
+    ax1.set_title('Training Set', fontdict=font)
 
     ax2 = plt.subplot(gs[1, 0])
-    ax2.pie(sizes_test, explode=explode, autopct='%1.1f%%',
+    ax2.pie(sizes_test, explode=explode, autopct=lambda pct: func(pct, sizes_test),
             shadow=True, startangle=0, colors=colors)
     ax2.axis('equal')  # Equal aspect ratio ensures that pie is drawn as a circle.
-    ax2.set_title('Test Set', y=1.08, fontdict=font)
+    ax2.set_title('Test Set', fontdict=font)
     #Move plot to the right
     box = ax2.get_position()
     box.x0 = box.x0 + 0.2
     box.x1 = box.x1 + 0.2
     ax2.set_position(box)
-
+#y=1.08
     ax3 = plt.subplot(gs[0, 1])
-    ax3.pie(sizes_val, explode=explode, autopct='%1.1f%%',
+    ax3.pie(sizes_val, explode=explode, autopct=lambda pct: func(pct, sizes_val),
             shadow=True, startangle=0, colors=colors)
     ax3.axis('equal')  # Equal aspect ratio ensures that pie is drawn as a circle.
-    ax3.set_title('Validation Set', y=1.08, fontdict=font)
+    ax3.set_title('Validation Set', fontdict=font)
     # Place legend in the right bottom corner
     plt.legend(labels, loc='lower right', bbox_to_anchor=(1.2, -1.5), fontsize=12)
 
@@ -163,11 +174,25 @@ def analyze_fish_time(fish_time, updated_dict):
 
     plt.rc('font', **font)
     # Then, plot the time salmon spends on the line for each video
-    plt.figure(figsize=(12, 8))
+    #plt.figure(figsize=(12, 8))
     #fig = plt.bar(range(len(fish_time_no_occlusions)), [x['time'] for x in fish_time_no_occlusions])
     color_list = []
     fast_threshold = median_frames_on_line * 0.75
     slow_threshold = median_frames_on_line * 1.25
+    #fast_threshold = 34
+    #slow_threshold = 71.25
+    print("fast threshold: " + str(fast_threshold))
+    print("slow threshold: " + str(slow_threshold))
+    # box plot
+    #bp = plt.boxplot(y_values)
+    #print(bp)
+    #plt.title('Distribution of time salmon spends on the line')
+    #plt.ylabel('Frames on line')
+    #plt.xlabel('Video')
+    #plt.xticks([1], ['Salmon'])
+    #plt.show()
+
+
     x_index = 0
     for y in y_values:
         # Fast fish are salmon that spend less than 25% of the median time on the line
@@ -190,9 +215,10 @@ def analyze_fish_time(fish_time, updated_dict):
 
     plt.xlabel('Video Number', font=font)
     plt.ylabel('Time (frames)', font=font)
-    plt.title('Time Salmon Spends on the Line', font=font)
+    plt.title('Time Salmon Spends on intersecting with LOI', font=font)
     # Set legend of each color
-    labels = [r'$ROI_t < th_{fast}$', '$th_{fast}\geq ROI_t \leq th_{slow}$', '$ROI_t > th_{slow}$']
+    labels = [r'Brief appearance', 'Average appearance', 'Extended appearance']
+
     plt.legend(handles=[plt.Rectangle((0, 0), 1, 1, fc="red", edgecolor='none'),
                         plt.Rectangle((0, 0), 1, 1, fc="green", edgecolor='none'),
                         plt.Rectangle((0, 0), 1, 1, fc="blue", edgecolor='none')],
@@ -222,25 +248,34 @@ def analyze_fish_time(fish_time, updated_dict):
     for x in fish_time_no_occlusions:
         if x['time'] < fast_threshold:
             if x['name'] in train['file_name']:
+                print(x['name'] + " is a fast fish in the train set")
                 train_fast += 1
             elif x['name'] in test['file_name']:
+                #print(x['name'] + " is a fast fish in the test set")
                 test_fast += 1
             elif x['name'] in val['file_name']:
+                #print(x['name'] + " is a fast fish in the validation set")
                 val_fast += 1
         elif x['time'] > slow_threshold:
-            print(x['name'], train['file_name'])
+            #print(x['name'], train['file_name'])
             if x['name'] in train['file_name']:
+                print(x['name'] + " is a slow fish in the train set")
                 train_slow += 1
             elif x['name'] in test['file_name']:
+                #print(x['name'] + " is a slow fish in the test set")
                 test_slow += 1
             elif x['name'] in val['file_name']:
+                #print(x['name'] + " is a slow fish in the validation set")
                 val_slow += 1
         else:
             if x['name'] in train['file_name']:
+                print(x['name'] + " is a medium fish in the train set")
                 train_medium += 1
             elif x['name'] in test['file_name']:
+                #print(x['name'] + " is a medium fish in the test set")
                 test_medium += 1
             elif x['name'] in val['file_name']:
+                #print(x['name'] + " is a medium fish in the validation set")
                 val_medium += 1
     print("Train Fast: " + str(train_fast))
     print("Test Fast: " + str(test_fast))
@@ -270,6 +305,7 @@ def analyze_fish_time(fish_time, updated_dict):
                 labels=labels)
     plt.legend()
     # Plot a pie chart of the distribution of Other_fish, multiple fish/ occlusions, fast, medium, and slow fish in the train, test, and validation sets
+
     multiple_occlusions_video_count = 6
     other_fish_video_count = 4
     fast_fish_video_count = train_fast + test_fast + val_fast
@@ -280,7 +316,7 @@ def analyze_fish_time(fish_time, updated_dict):
     explode = (0.1, 0, 0, 0, 0)  # only "explode" the 2nd slice (i.e. 'Hogs')
     colors = ['yellowgreen', 'gold', 'red', 'green', 'blue']
     fig1, ax1 = plt.subplots()
-    ax1.pie(sizes, explode=explode, labels=labels, autopct='%1.1f%%',
+    ax1.pie(sizes, explode=explode, labels=labels, autopct=lambda pct: func(pct, sizes),
             shadow=True, startangle=0, colors=colors)
     ax1.axis('equal')  # Equal aspect ratio ensures that pie is drawn as a circle.
     plt.title('Distribution of video categories in the entire dataset', y=1.08, font=font)
