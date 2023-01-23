@@ -30,8 +30,10 @@ def baseline(distance=200, threshold=900, path=None, file_results='results.json'
     print(f"--------------------------------------------------\nStarting list of videos -------parameters of computing : Distance {distance}   Threshold: {threshold}")
 
     initialize_json(file_results)  # initialize json file
+    average_time_frame_per_video = []
     for k, vid in enumerate(list_vid):  # for each video in the list
         if vid is not None:  # if video is not empty
+            initial_time = time.time()
             video = vd(vid, k)  # create video object
             video.DISTANCE_FROM_MIDDLE = distance  # set distance
             print("\n Evaluating video number : " + str(video.num_video) + "---Video : " + video.name)
@@ -40,8 +42,11 @@ def baseline(distance=200, threshold=900, path=None, file_results='results.json'
             fish_detection(video, threshold)  # detect fish
             counting_fish(video)  # count fish
             export_json(video, file_results)  # export results to json file
+            end = time.time() - initial_time
+            average_time_frame_per_video.append(end / video.number_frames)
             # show_video(video, threshold) # show video
             # show_line(video, threshold) # show line
+    print("Frame rate ", 1/np.mean(average_time_frame_per_video))
     cv2.destroyAllWindows()
     # Compute counting accuracy
     accuracy, false_videos = evaluate_frame_count(file_results)
